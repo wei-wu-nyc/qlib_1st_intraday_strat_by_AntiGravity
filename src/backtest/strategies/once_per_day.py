@@ -11,7 +11,7 @@ class OncePerDayStrategy(IntradayBacktestEngine):
     INSTRUMENT_PRIORITY = ['SPY', 'QQQ', 'IWM', 'DIA']
     
     def __init__(self, config: Optional[BacktestConfig] = None, 
-                 entry_bar: int = 6, exit_bars: int = 24):
+                 entry_bar: int = 6, exit_bars: int = 36):
         """
         Args:
             config: Backtest configuration
@@ -38,18 +38,21 @@ class OncePerDayStrategy(IntradayBacktestEngine):
         if not isinstance(signals.index, pd.MultiIndex):
             raise ValueError("Requires MultiIndex (datetime, instrument)")
         
-        all_timestamps = signals.index.get_level_values(0).unique().sort_values()
         prev_date = None
         daily_start_equity = self.config.initial_capital
         entered_today = False
+        last_timestamp = None
         
-        for timestamp in all_timestamps:
+        # Optimization: groupby is faster than repeated .loc access for large indices
+        for timestamp, chunk in signals.groupby(level=0):
             current_date = timestamp.date()
-            if timestamp not in signals.index:
-                # Should not happen with MultiCheck but safety
-                continue
-                
-            bar_data = signals.loc[timestamp]
+            last_timestamp = timestamp
+            bar_data = chunk.droplevel(0)
+            
+            # Legacy check (should be safe with groupby)
+            # if timestamp not in signals.index: continue
+            
+            # Ensure bar_index is available (take first)
             bar_index = int(bar_data['bar_index'].iloc[0])
             
             # New day reset
@@ -103,9 +106,15 @@ class OncePerDayStrategy(IntradayBacktestEngine):
             self.equity_curve.append((timestamp, self._get_equity(bar_data)))
         
         # Close remaining
-        if self.position:
-            last_ts = all_timestamps[-1]
-            last_data = signals.loc[last_ts]
+        if self.position and last_timestamp is not None:
+            last_ts = last_timestamp
+            try:
+                last_data = signals.loc[last_ts]
+            except KeyError:
+                 # Fallback if loc fails (shouldn't if valid ts)
+                 # Reconstruct from groupby? No, simpler to just skip or log
+                 return self.calculate_results(self.capital, self.daily_returns, self.trades, self.equity_curve)
+
             inst = self.position['instrument']
             if inst in last_data.index:
                 self._close(inst, last_ts, last_data.loc[inst, 'close'], 

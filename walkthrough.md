@@ -270,7 +270,10 @@ This project successfully demonstrated that a **Mixture of Experts (MoE)** appro
 **Key Insights**:
 - **Afternoon Breakouts Run Long**: For **13:00 Afternoon** entries, extending the hold to **30 bars (2.5h)** yielded the best results (**35.93% Return**, **4.47 BP/trade**).
 - **Noon Persistence**: Mid-day (**12:00**) signals also benefited from longer holds (**36 bars** -> **22.28% Return**).
-- **Morning Reversion**: Morning signals (10:00) degraded with longer holds, suggesting they are quick reversion/breakout moves that shouldn't be married.
+- **Morning Trends**: Contrary to initial "reversion" assumptions, **Morning entries (09:40, 10:00)** perform best with the **longest holding period (36 bars)**.
+    - **10:00 Entry**: Returns double from **5.78%** (24 bars) to **11.74%** (36 bars).
+    - **09:40 Entry**: Flips from negative to **+6.00%** return at 36 bars.
+    - *Insight*: Successful morning breakouts take time to develop; cutting them at 1 hour (12 bars) often exits prematureley before the trend establishes.
 
 ![Horizon Sensitivity Dashboard](horizon_sensitivity_full_dashboard_1769552724805.png)
 

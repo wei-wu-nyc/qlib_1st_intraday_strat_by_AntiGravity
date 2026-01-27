@@ -1,64 +1,73 @@
 # Intraday Trading Strategy Results
-Generated: 2026-01-24 00:39:56
+Generated: 2026-01-24 22:29:24
 
 ## Performance Summary
 
-| Strategy         | Metric         | Train   | Valid   | Test   |
-|:-----------------|:---------------|:--------|:--------|:-------|
-| MomentumBreakout | Ann. Return    | -0.28%  | -0.20%  | -0.33% |
-| MomentumBreakout | Sharpe Ratio   | -0.08   | -0.06   | -0.10  |
-| MomentumBreakout | Max Drawdown   | 30.70%  | 14.66%  | 16.14% |
-| MomentumBreakout | Win Rate       | 52.5%   | 54.0%   | 52.4%  |
-| MomentumBreakout | Num Trades     | 10649   | 1328    | 1747   |
-| MomentumBreakout | Time in Market | 4.5%    | 3.6%    | 3.3%   |
-| MeanReversion    | Ann. Return    | 3.93%   | 4.78%   | -1.50% |
-| MeanReversion    | Sharpe Ratio   | 0.53    | 0.66    | -0.20  |
-| MeanReversion    | Max Drawdown   | 31.56%  | 13.29%  | 33.22% |
-| MeanReversion    | Win Rate       | 62.6%   | 65.1%   | 60.0%  |
-| MeanReversion    | Num Trades     | 16862   | 2627    | 3479   |
-| MeanReversion    | Time in Market | 15.6%   | 14.5%   | 15.5%  |
-| ORB              | Ann. Return    | -0.05%  | -0.48%  | 1.83%  |
-| ORB              | Sharpe Ratio   | -0.01   | -0.11   | 0.43   |
-| ORB              | Max Drawdown   | 24.87%  | 22.79%  | 6.66%  |
-| ORB              | Win Rate       | 52.6%   | 55.7%   | 60.0%  |
-| ORB              | Num Trades     | 2405    | 377     | 532    |
-| ORB              | Time in Market | 8.6%    | 8.4%    | 9.0%   |
-| XGBoost_24bar    | Ann. Return    | 42.24%  | 26.39%  | 8.17%  |
-| XGBoost_24bar    | Sharpe Ratio   | 2.73    | 1.96    | 0.57   |
-| XGBoost_24bar    | Max Drawdown   | 18.69%  | 13.63%  | 23.59% |
-| XGBoost_24bar    | Win Rate       | 57.0%   | 57.2%   | 54.5%  |
-| XGBoost_24bar    | Num Trades     | 18097   | 2947    | 3891   |
-| XGBoost_24bar    | Time in Market | 87.2%   | 86.2%   | 82.3%  |
-| LightGBM_24bar   | Ann. Return    | 36.01%  | 25.71%  | 10.45% |
-| LightGBM_24bar   | Sharpe Ratio   | 2.32    | 1.91    | 0.76   |
-| LightGBM_24bar   | Max Drawdown   | 20.38%  | 16.72%  | 18.48% |
-| LightGBM_24bar   | Win Rate       | 56.4%   | 57.4%   | 55.2%  |
-| LightGBM_24bar   | Num Trades     | 18110   | 2941    | 3887   |
-| LightGBM_24bar   | Time in Market | 87.2%   | 85.4%   | 80.6%  |
-| XGBoost_36bar    | Ann. Return    | 42.72%  | 25.38%  | 6.57%  |
-| XGBoost_36bar    | Sharpe Ratio   | 2.83    | 1.87    | 0.44   |
-| XGBoost_36bar    | Max Drawdown   | 15.48%  | 14.82%  | 21.98% |
-| XGBoost_36bar    | Win Rate       | 57.0%   | 57.1%   | 54.5%  |
-| XGBoost_36bar    | Num Trades     | 17959   | 2946    | 3877   |
-| XGBoost_36bar    | Time in Market | 86.9%   | 87.2%   | 83.4%  |
-| LightGBM_36bar   | Ann. Return    | 37.75%  | 22.68%  | 10.01% |
-| LightGBM_36bar   | Sharpe Ratio   | 2.49    | 1.71    | 0.69   |
-| LightGBM_36bar   | Max Drawdown   | 16.72%  | 14.63%  | 19.82% |
-| LightGBM_36bar   | Win Rate       | 56.4%   | 56.6%   | 54.9%  |
-| LightGBM_36bar   | Num Trades     | 17936   | 2934    | 3866   |
-| LightGBM_36bar   | Time in Market | 86.6%   | 85.7%   | 81.3%  |
-| XGBoost_eod      | Ann. Return    | 46.23%  | 24.99%  | 7.86%  |
-| XGBoost_eod      | Sharpe Ratio   | 3.29    | 1.83    | 0.53   |
-| XGBoost_eod      | Max Drawdown   | 18.69%  | 16.75%  | 26.05% |
-| XGBoost_eod      | Win Rate       | 57.3%   | 57.4%   | 54.3%  |
-| XGBoost_eod      | Num Trades     | 17410   | 2886    | 3784   |
-| XGBoost_eod      | Time in Market | 83.4%   | 84.8%   | 81.3%  |
-| LightGBM_eod     | Ann. Return    | 38.98%  | 25.83%  | 9.30%  |
-| LightGBM_eod     | Sharpe Ratio   | 2.74    | 1.93    | 0.64   |
-| LightGBM_eod     | Max Drawdown   | 22.86%  | 18.02%  | 27.31% |
-| LightGBM_eod     | Win Rate       | 56.6%   | 57.4%   | 56.3%  |
-| LightGBM_eod     | Num Trades     | 17371   | 2866    | 3769   |
-| LightGBM_eod     | Time in Market | 82.8%   | 82.6%   | 78.1%  |
+| Strategy         | Metric             | Train   | Valid   | Test    |
+|:-----------------|:-------------------|:--------|:--------|:--------|
+| MomentumBreakout | Ann. Return        | 5.77%   | 19.49%  | -24.34% |
+| MomentumBreakout | Sharpe Ratio       | 0.17    | 0.47    | -0.79   |
+| MomentumBreakout | Max Drawdown       | 36.52%  | 6.92%   | 68.63%  |
+| MomentumBreakout | Win Rate           | 51.5%   | 55.7%   | 51.6%   |
+| MomentumBreakout | Num Trades         | 4796    | 682     | 881     |
+| MomentumBreakout | Time in Market     | 8.2%    | 7.0%    | 6.7%    |
+| MomentumBreakout | Avg Holding (bars) | 6.2     | 6.0     | 5.9     |
+| MeanReversion    | Ann. Return        | -9.84%  | 4.69%   | -11.56% |
+| MeanReversion    | Sharpe Ratio       | -0.37   | 0.27    | -1.40   |
+| MeanReversion    | Max Drawdown       | 88.19%  | 23.90%  | 40.30%  |
+| MeanReversion    | Win Rate           | 59.4%   | 60.6%   | 55.3%   |
+| MeanReversion    | Num Trades         | 5647    | 918     | 1184    |
+| MeanReversion    | Time in Market     | 21.1%   | 20.9%   | 21.9%   |
+| MeanReversion    | Avg Holding (bars) | 13.6    | 13.4    | 14.4    |
+| ORB              | Ann. Return        | -5.97%  | -1.92%  | -1.18%  |
+| ORB              | Sharpe Ratio       | -0.45   | -0.22   | -0.07   |
+| ORB              | Max Drawdown       | 68.85%  | 22.79%  | 32.75%  |
+| ORB              | Win Rate           | 52.3%   | 55.7%   | 60.0%   |
+| ORB              | Num Trades         | 2398    | 377     | 532     |
+| ORB              | Time in Market     | 34.4%   | 33.4%   | 35.8%   |
+| ORB              | Avg Holding (bars) | 52.0    | 52.2    | 52.6    |
+| XGBoost_24bar    | Ann. Return        | 100.26% | 6.19%   | -33.44% |
+| XGBoost_24bar    | Sharpe Ratio       | 1.02    | 0.30    | -0.74   |
+| XGBoost_24bar    | Max Drawdown       | 78.26%  | 29.28%  | 85.06%  |
+| XGBoost_24bar    | Win Rate           | 53.9%   | 53.6%   | 52.5%   |
+| XGBoost_24bar    | Num Trades         | 4601    | 754     | 999     |
+| XGBoost_24bar    | Time in Market     | 92.0%   | 91.9%   | 90.5%   |
+| XGBoost_24bar    | Avg Holding (bars) | 72.5    | 71.8    | 70.7    |
+| LightGBM_24bar   | Ann. Return        | 90.48%  | -8.13%  | -8.63%  |
+| LightGBM_24bar   | Sharpe Ratio       | 0.86    | -0.31   | -0.28   |
+| LightGBM_24bar   | Max Drawdown       | 69.43%  | 49.12%  | 54.11%  |
+| LightGBM_24bar   | Win Rate           | 53.1%   | 52.9%   | 53.2%   |
+| LightGBM_24bar   | Num Trades         | 4609    | 750     | 994     |
+| LightGBM_24bar   | Time in Market     | 92.2%   | 90.9%   | 88.6%   |
+| LightGBM_24bar   | Avg Holding (bars) | 72.5    | 71.3    | 69.6    |
+| XGBoost_36bar    | Ann. Return        | 76.13%  | 8.39%   | -16.51% |
+| XGBoost_36bar    | Sharpe Ratio       | 0.87    | 0.40    | -0.48   |
+| XGBoost_36bar    | Max Drawdown       | 94.29%  | 28.05%  | 61.80%  |
+| XGBoost_36bar    | Win Rate           | 54.2%   | 53.9%   | 51.7%   |
+| XGBoost_36bar    | Num Trades         | 4590    | 753     | 997     |
+| XGBoost_36bar    | Time in Market     | 92.2%   | 92.6%   | 91.2%   |
+| XGBoost_36bar    | Avg Holding (bars) | 72.8    | 72.4    | 71.4    |
+| LightGBM_36bar   | Ann. Return        | 67.31%  | 12.91%  | -10.26% |
+| LightGBM_36bar   | Sharpe Ratio       | 0.62    | 0.44    | -0.30   |
+| LightGBM_36bar   | Max Drawdown       | 95.87%  | 31.93%  | 61.53%  |
+| LightGBM_36bar   | Win Rate           | 53.5%   | 53.5%   | 52.9%   |
+| LightGBM_36bar   | Num Trades         | 4594    | 753     | 994     |
+| LightGBM_36bar   | Time in Market     | 92.2%   | 91.6%   | 90.3%   |
+| LightGBM_36bar   | Avg Holding (bars) | 72.8    | 71.6    | 70.9    |
+| XGBoost_eod      | Ann. Return        | 94.97%  | 9.89%   | -29.88% |
+| XGBoost_eod      | Sharpe Ratio       | 1.19    | 0.48    | -0.65   |
+| XGBoost_eod      | Max Drawdown       | 75.96%  | 28.00%  | 82.65%  |
+| XGBoost_eod      | Win Rate           | 55.2%   | 54.2%   | 52.2%   |
+| XGBoost_eod      | Num Trades         | 4545    | 751     | 992     |
+| XGBoost_eod      | Time in Market     | 90.8%   | 93.4%   | 91.5%   |
+| XGBoost_eod      | Avg Holding (bars) | 72.4    | 73.2    | 72.0    |
+| LightGBM_eod     | Ann. Return        | 51.97%  | 27.69%  | -34.83% |
+| LightGBM_eod     | Sharpe Ratio       | 0.64    | 1.84    | -0.76   |
+| LightGBM_eod     | Max Drawdown       | 93.74%  | 10.47%  | 85.01%  |
+| LightGBM_eod     | Win Rate           | 54.3%   | 55.8%   | 53.5%   |
+| LightGBM_eod     | Num Trades         | 4533    | 749     | 991     |
+| LightGBM_eod     | Time in Market     | 90.6%   | 91.9%   | 88.9%   |
+| LightGBM_eod     | Avg Holding (bars) | 72.4    | 72.2    | 70.0    |
 
 ## Strategy Details
 
@@ -66,58 +75,58 @@ Generated: 2026-01-24 00:39:56
 
 **Train**
 
-- Total Return: -18.90%
-- Ann. Return: -0.28%
-- Ann. Volatility: 3.70%
-- Sharpe Ratio: -0.08
-- Max Drawdown: 30.70%
-- Calmar Ratio: -0.01
-- Num Trades: 10649
-- Win Rate: 52.5%
-- Profit Factor: 0.99
-- Avg Trade Return: -0.001%
-- Avg Win: 0.200%
-- Avg Loss: -0.224%
-- Time in Market: 4.5%
-- Avg Holding (bars): 6.1
+- Total Return: 181.66%
+- Ann. Return: 5.77%
+- Ann. Volatility: 33.50%
+- Sharpe Ratio: 0.17
+- Max Drawdown: 36.52%
+- Calmar Ratio: 0.16
+- Num Trades: 4796
+- Win Rate: 51.5%
+- Profit Factor: 1.32
+- Avg Trade Return: 0.035%
+- Avg Win: 0.283%
+- Avg Loss: -0.228%
+- Time in Market: 8.2%
+- Avg Holding (bars): 6.2
 - Excess Return: 0.00%
 - Info Ratio: 0.00
 
 **Valid**
 
-- Total Return: -2.35%
-- Ann. Return: -0.20%
-- Ann. Volatility: 3.24%
-- Sharpe Ratio: -0.06
-- Max Drawdown: 14.66%
-- Calmar Ratio: -0.01
-- Num Trades: 1328
-- Win Rate: 54.0%
-- Profit Factor: 0.99
-- Avg Trade Return: -0.001%
-- Avg Win: 0.180%
-- Avg Loss: -0.214%
-- Time in Market: 3.6%
-- Avg Holding (bars): 6.3
+- Total Return: 70.47%
+- Ann. Return: 19.49%
+- Ann. Volatility: 41.32%
+- Sharpe Ratio: 0.47
+- Max Drawdown: 6.92%
+- Calmar Ratio: 2.81
+- Num Trades: 682
+- Win Rate: 55.7%
+- Profit Factor: 2.08
+- Avg Trade Return: 0.104%
+- Avg Win: 0.360%
+- Avg Loss: -0.217%
+- Time in Market: 7.0%
+- Avg Holding (bars): 6.0
 - Excess Return: 0.00%
 - Info Ratio: 0.00
 
 **Test**
 
-- Total Return: -5.19%
-- Ann. Return: -0.33%
-- Ann. Volatility: 3.29%
-- Sharpe Ratio: -0.10
-- Max Drawdown: 16.14%
-- Calmar Ratio: -0.02
-- Num Trades: 1747
-- Win Rate: 52.4%
-- Profit Factor: 0.98
-- Avg Trade Return: -0.003%
-- Avg Win: 0.206%
-- Avg Loss: -0.232%
-- Time in Market: 3.3%
-- Avg Holding (bars): 6.0
+- Total Return: -66.98%
+- Ann. Return: -24.34%
+- Ann. Volatility: 30.90%
+- Sharpe Ratio: -0.79
+- Max Drawdown: 68.63%
+- Calmar Ratio: -0.35
+- Num Trades: 881
+- Win Rate: 51.6%
+- Profit Factor: 0.52
+- Avg Trade Return: -0.088%
+- Avg Win: 0.182%
+- Avg Loss: -0.376%
+- Time in Market: 6.7%
+- Avg Holding (bars): 5.9
 - Excess Return: 0.00%
 - Info Ratio: 0.00
 
@@ -125,58 +134,58 @@ Generated: 2026-01-24 00:39:56
 
 **Train**
 
-- Total Return: 1618.65%
-- Ann. Return: 3.93%
-- Ann. Volatility: 7.43%
-- Sharpe Ratio: 0.53
-- Max Drawdown: 31.56%
-- Calmar Ratio: 0.12
-- Num Trades: 16862
-- Win Rate: 62.6%
-- Profit Factor: 1.12
-- Avg Trade Return: 0.018%
-- Avg Win: 0.265%
-- Avg Loss: -0.397%
-- Time in Market: 15.6%
-- Avg Holding (bars): 13.4
+- Total Return: -85.21%
+- Ann. Return: -9.84%
+- Ann. Volatility: 26.69%
+- Sharpe Ratio: -0.37
+- Max Drawdown: 88.19%
+- Calmar Ratio: -0.11
+- Num Trades: 5647
+- Win Rate: 59.4%
+- Profit Factor: 0.90
+- Avg Trade Return: -0.018%
+- Avg Win: 0.284%
+- Avg Loss: -0.461%
+- Time in Market: 21.1%
+- Avg Holding (bars): 13.6
 - Excess Return: 0.00%
 - Info Ratio: 0.00
 
 **Valid**
 
-- Total Return: 75.14%
-- Ann. Return: 4.78%
-- Ann. Volatility: 7.27%
-- Sharpe Ratio: 0.66
-- Max Drawdown: 13.29%
-- Calmar Ratio: 0.36
-- Num Trades: 2627
-- Win Rate: 65.1%
-- Profit Factor: 1.15
-- Avg Trade Return: 0.023%
-- Avg Win: 0.260%
-- Avg Loss: -0.419%
-- Time in Market: 14.5%
-- Avg Holding (bars): 13.0
+- Total Return: 14.71%
+- Ann. Return: 4.69%
+- Ann. Volatility: 17.46%
+- Sharpe Ratio: 0.27
+- Max Drawdown: 23.90%
+- Calmar Ratio: 0.20
+- Num Trades: 918
+- Win Rate: 60.6%
+- Profit Factor: 1.12
+- Avg Trade Return: 0.019%
+- Avg Win: 0.306%
+- Avg Loss: -0.421%
+- Time in Market: 20.9%
+- Avg Holding (bars): 13.4
 - Excess Return: 0.00%
 - Info Ratio: 0.00
 
 **Test**
 
-- Total Return: -21.43%
-- Ann. Return: -1.50%
-- Ann. Volatility: 7.38%
-- Sharpe Ratio: -0.20
-- Max Drawdown: 33.22%
-- Calmar Ratio: -0.05
-- Num Trades: 3479
-- Win Rate: 60.0%
-- Profit Factor: 0.96
-- Avg Trade Return: -0.006%
-- Avg Win: 0.262%
-- Avg Loss: -0.407%
-- Time in Market: 15.5%
-- Avg Holding (bars): 13.9
+- Total Return: -38.66%
+- Ann. Return: -11.56%
+- Ann. Volatility: 8.26%
+- Sharpe Ratio: -1.40
+- Max Drawdown: 40.30%
+- Calmar Ratio: -0.29
+- Num Trades: 1184
+- Win Rate: 55.3%
+- Profit Factor: 0.78
+- Avg Trade Return: -0.040%
+- Avg Win: 0.251%
+- Avg Loss: -0.401%
+- Time in Market: 21.9%
+- Avg Holding (bars): 14.4
 - Excess Return: 0.00%
 - Info Ratio: 0.00
 
@@ -184,19 +193,19 @@ Generated: 2026-01-24 00:39:56
 
 **Train**
 
-- Total Return: -3.39%
-- Ann. Return: -0.05%
-- Ann. Volatility: 4.49%
-- Sharpe Ratio: -0.01
-- Max Drawdown: 24.87%
-- Calmar Ratio: -0.00
-- Num Trades: 2405
-- Win Rate: 52.6%
-- Profit Factor: 1.01
-- Avg Trade Return: 0.002%
-- Avg Win: 0.477%
-- Avg Loss: -0.525%
-- Time in Market: 8.6%
+- Total Return: -67.91%
+- Ann. Return: -5.97%
+- Ann. Volatility: 13.17%
+- Sharpe Ratio: -0.45
+- Max Drawdown: 68.85%
+- Calmar Ratio: -0.09
+- Num Trades: 2398
+- Win Rate: 52.3%
+- Profit Factor: 0.86
+- Avg Trade Return: -0.040%
+- Avg Win: 0.472%
+- Avg Loss: -0.602%
+- Time in Market: 34.4%
 - Avg Holding (bars): 52.0
 - Excess Return: 0.00%
 - Info Ratio: 0.00
@@ -204,37 +213,37 @@ Generated: 2026-01-24 00:39:56
 **Valid**
 
 - Total Return: -5.66%
-- Ann. Return: -0.48%
-- Ann. Volatility: 4.31%
-- Sharpe Ratio: -0.11
+- Ann. Return: -1.92%
+- Ann. Volatility: 8.63%
+- Sharpe Ratio: -0.22
 - Max Drawdown: 22.79%
-- Calmar Ratio: -0.02
+- Calmar Ratio: -0.08
 - Num Trades: 377
 - Win Rate: 55.7%
 - Profit Factor: 0.95
 - Avg Trade Return: -0.012%
 - Avg Win: 0.408%
 - Avg Loss: -0.541%
-- Time in Market: 8.4%
+- Time in Market: 33.4%
 - Avg Holding (bars): 52.2
 - Excess Return: 0.00%
 - Info Ratio: 0.00
 
 **Test**
 
-- Total Return: 33.41%
-- Ann. Return: 1.83%
-- Ann. Volatility: 4.25%
-- Sharpe Ratio: 0.43
-- Max Drawdown: 6.66%
-- Calmar Ratio: 0.27
+- Total Return: -4.60%
+- Ann. Return: -1.18%
+- Ann. Volatility: 16.89%
+- Sharpe Ratio: -0.07
+- Max Drawdown: 32.75%
+- Calmar Ratio: -0.04
 - Num Trades: 532
 - Win Rate: 60.0%
-- Profit Factor: 1.28
-- Avg Trade Return: 0.057%
+- Profit Factor: 1.01
+- Avg Trade Return: 0.004%
 - Avg Win: 0.436%
-- Avg Loss: -0.510%
-- Time in Market: 9.0%
+- Avg Loss: -0.643%
+- Time in Market: 35.8%
 - Avg Holding (bars): 52.6
 - Excess Return: 0.00%
 - Info Ratio: 0.00
@@ -243,58 +252,58 @@ Generated: 2026-01-24 00:39:56
 
 **Train**
 
-- Total Return: 19952492047027.43%
-- Ann. Return: 42.24%
-- Ann. Volatility: 15.46%
-- Sharpe Ratio: 2.73
-- Max Drawdown: 18.69%
-- Calmar Ratio: 2.26
-- Num Trades: 18097
-- Win Rate: 57.0%
-- Profit Factor: 1.58
-- Avg Trade Return: 0.149%
-- Avg Win: 0.707%
-- Avg Loss: -0.591%
-- Time in Market: 87.2%
-- Avg Holding (bars): 69.9
+- Total Return: 36932509.50%
+- Ann. Return: 100.26%
+- Ann. Volatility: 98.66%
+- Sharpe Ratio: 1.02
+- Max Drawdown: 78.26%
+- Calmar Ratio: 1.28
+- Num Trades: 4601
+- Win Rate: 53.9%
+- Profit Factor: 2.29
+- Avg Trade Return: 0.378%
+- Avg Win: 1.242%
+- Avg Loss: -0.633%
+- Time in Market: 92.0%
+- Avg Holding (bars): 72.5
 - Excess Return: 0.00%
 - Info Ratio: 0.00
 
 **Valid**
 
-- Total Return: 1562.13%
-- Ann. Return: 26.39%
-- Ann. Volatility: 13.44%
-- Sharpe Ratio: 1.96
-- Max Drawdown: 13.63%
-- Calmar Ratio: 1.94
-- Num Trades: 2947
-- Win Rate: 57.2%
-- Profit Factor: 1.41
-- Avg Trade Return: 0.099%
-- Avg Win: 0.592%
-- Avg Loss: -0.562%
-- Time in Market: 86.2%
-- Avg Holding (bars): 68.9
+- Total Return: 19.76%
+- Ann. Return: 6.19%
+- Ann. Volatility: 20.78%
+- Sharpe Ratio: 0.30
+- Max Drawdown: 29.28%
+- Calmar Ratio: 0.21
+- Num Trades: 754
+- Win Rate: 53.6%
+- Profit Factor: 1.10
+- Avg Trade Return: 0.033%
+- Avg Win: 0.657%
+- Avg Loss: -0.686%
+- Time in Market: 91.9%
+- Avg Holding (bars): 71.8
 - Excess Return: 0.00%
 - Info Ratio: 0.00
 
 **Test**
 
-- Total Return: 248.90%
-- Ann. Return: 8.17%
-- Ann. Volatility: 14.22%
-- Sharpe Ratio: 0.57
-- Max Drawdown: 23.59%
-- Calmar Ratio: 0.35
-- Num Trades: 3891
-- Win Rate: 54.5%
-- Profit Factor: 1.12
-- Avg Trade Return: 0.036%
-- Avg Win: 0.607%
-- Avg Loss: -0.648%
-- Time in Market: 82.3%
-- Avg Holding (bars): 66.0
+- Total Return: -80.18%
+- Ann. Return: -33.44%
+- Ann. Volatility: 45.42%
+- Sharpe Ratio: -0.74
+- Max Drawdown: 85.06%
+- Calmar Ratio: -0.39
+- Num Trades: 999
+- Win Rate: 52.5%
+- Profit Factor: 0.80
+- Avg Trade Return: -0.094%
+- Avg Win: 0.705%
+- Avg Loss: -0.976%
+- Time in Market: 90.5%
+- Avg Holding (bars): 70.7
 - Excess Return: 0.00%
 - Info Ratio: 0.00
 
@@ -302,58 +311,58 @@ Generated: 2026-01-24 00:39:56
 
 **Train**
 
-- Total Return: 729144672812.20%
-- Ann. Return: 36.01%
-- Ann. Volatility: 15.55%
-- Sharpe Ratio: 2.32
-- Max Drawdown: 20.38%
-- Calmar Ratio: 1.77
-- Num Trades: 18110
-- Win Rate: 56.4%
-- Profit Factor: 1.49
-- Avg Trade Return: 0.130%
-- Avg Win: 0.702%
-- Avg Loss: -0.609%
-- Time in Market: 87.2%
-- Avg Holding (bars): 69.8
+- Total Return: 14657922.20%
+- Ann. Return: 90.48%
+- Ann. Volatility: 105.47%
+- Sharpe Ratio: 0.86
+- Max Drawdown: 69.43%
+- Calmar Ratio: 1.30
+- Num Trades: 4609
+- Win Rate: 53.1%
+- Profit Factor: 2.20
+- Avg Trade Return: 0.375%
+- Avg Win: 1.296%
+- Avg Loss: -0.668%
+- Time in Market: 92.2%
+- Avg Holding (bars): 72.5
 - Excess Return: 0.00%
 - Info Ratio: 0.00
 
 **Valid**
 
-- Total Return: 1456.87%
-- Ann. Return: 25.71%
-- Ann. Volatility: 13.45%
-- Sharpe Ratio: 1.91
-- Max Drawdown: 16.72%
-- Calmar Ratio: 1.54
-- Num Trades: 2941
-- Win Rate: 57.4%
-- Profit Factor: 1.41
-- Avg Trade Return: 0.097%
-- Avg Win: 0.579%
-- Avg Loss: -0.551%
-- Time in Market: 85.4%
-- Avg Holding (bars): 68.4
+- Total Return: -22.45%
+- Ann. Return: -8.13%
+- Ann. Volatility: 26.14%
+- Sharpe Ratio: -0.31
+- Max Drawdown: 49.12%
+- Calmar Ratio: -0.17
+- Num Trades: 750
+- Win Rate: 52.9%
+- Profit Factor: 0.95
+- Avg Trade Return: -0.018%
+- Avg Win: 0.630%
+- Avg Loss: -0.747%
+- Time in Market: 90.9%
+- Avg Holding (bars): 71.3
 - Excess Return: 0.00%
 - Info Ratio: 0.00
 
 **Test**
 
-- Total Return: 386.11%
-- Ann. Return: 10.45%
-- Ann. Volatility: 13.74%
-- Sharpe Ratio: 0.76
-- Max Drawdown: 18.48%
-- Calmar Ratio: 0.57
-- Num Trades: 3887
-- Win Rate: 55.2%
-- Profit Factor: 1.16
-- Avg Trade Return: 0.045%
-- Avg Win: 0.587%
-- Avg Loss: -0.625%
-- Time in Market: 80.6%
-- Avg Holding (bars): 64.7
+- Total Return: -30.17%
+- Ann. Return: -8.63%
+- Ann. Volatility: 30.43%
+- Sharpe Ratio: -0.28
+- Max Drawdown: 54.11%
+- Calmar Ratio: -0.16
+- Num Trades: 994
+- Win Rate: 53.2%
+- Profit Factor: 0.97
+- Avg Trade Return: -0.010%
+- Avg Win: 0.685%
+- Avg Loss: -0.802%
+- Time in Market: 88.6%
+- Avg Holding (bars): 69.6
 - Excess Return: 0.00%
 - Info Ratio: 0.00
 
@@ -361,58 +370,58 @@ Generated: 2026-01-24 00:39:56
 
 **Train**
 
-- Total Return: 25577826664829.31%
-- Ann. Return: 42.72%
-- Ann. Volatility: 15.08%
-- Sharpe Ratio: 2.83
-- Max Drawdown: 15.48%
-- Calmar Ratio: 2.76
-- Num Trades: 17959
-- Win Rate: 57.0%
-- Profit Factor: 1.61
-- Avg Trade Return: 0.151%
-- Avg Win: 0.700%
-- Avg Loss: -0.578%
-- Time in Market: 86.9%
-- Avg Holding (bars): 70.1
+- Total Return: 3450928.74%
+- Ann. Return: 76.13%
+- Ann. Volatility: 87.06%
+- Sharpe Ratio: 0.87
+- Max Drawdown: 94.29%
+- Calmar Ratio: 0.81
+- Num Trades: 4590
+- Win Rate: 54.2%
+- Profit Factor: 2.05
+- Avg Trade Return: 0.323%
+- Avg Win: 1.164%
+- Avg Loss: -0.670%
+- Time in Market: 92.2%
+- Avg Holding (bars): 72.8
 - Excess Return: 0.00%
 - Info Ratio: 0.00
 
 **Valid**
 
-- Total Return: 1408.91%
-- Ann. Return: 25.38%
-- Ann. Volatility: 13.58%
-- Sharpe Ratio: 1.87
-- Max Drawdown: 14.82%
-- Calmar Ratio: 1.71
-- Num Trades: 2946
-- Win Rate: 57.1%
-- Profit Factor: 1.39
-- Avg Trade Return: 0.096%
-- Avg Win: 0.598%
-- Avg Loss: -0.573%
-- Time in Market: 87.2%
-- Avg Holding (bars): 69.7
+- Total Return: 27.35%
+- Ann. Return: 8.39%
+- Ann. Volatility: 20.94%
+- Sharpe Ratio: 0.40
+- Max Drawdown: 28.05%
+- Calmar Ratio: 0.30
+- Num Trades: 753
+- Win Rate: 53.9%
+- Profit Factor: 1.13
+- Avg Trade Return: 0.042%
+- Avg Win: 0.667%
+- Avg Loss: -0.690%
+- Time in Market: 92.6%
+- Avg Holding (bars): 72.4
 - Excess Return: 0.00%
 - Info Ratio: 0.00
 
 **Test**
 
-- Total Return: 174.99%
-- Ann. Return: 6.57%
-- Ann. Volatility: 14.78%
-- Sharpe Ratio: 0.44
-- Max Drawdown: 21.98%
-- Calmar Ratio: 0.30
-- Num Trades: 3877
-- Win Rate: 54.5%
-- Profit Factor: 1.10
-- Avg Trade Return: 0.031%
-- Avg Win: 0.613%
-- Avg Loss: -0.667%
-- Time in Market: 83.4%
-- Avg Holding (bars): 67.2
+- Total Return: -51.20%
+- Ann. Return: -16.51%
+- Ann. Volatility: 34.73%
+- Sharpe Ratio: -0.48
+- Max Drawdown: 61.80%
+- Calmar Ratio: -0.27
+- Num Trades: 997
+- Win Rate: 51.7%
+- Profit Factor: 0.92
+- Avg Trade Return: -0.034%
+- Avg Win: 0.733%
+- Avg Loss: -0.854%
+- Time in Market: 91.2%
+- Avg Holding (bars): 71.4
 - Excess Return: 0.00%
 - Info Ratio: 0.00
 
@@ -420,58 +429,58 @@ Generated: 2026-01-24 00:39:56
 
 **Train**
 
-- Total Return: 1864360018777.30%
-- Ann. Return: 37.75%
-- Ann. Volatility: 15.13%
-- Sharpe Ratio: 2.49
-- Max Drawdown: 16.72%
-- Calmar Ratio: 2.26
-- Num Trades: 17936
-- Win Rate: 56.4%
-- Profit Factor: 1.53
-- Avg Trade Return: 0.137%
-- Avg Win: 0.696%
-- Avg Loss: -0.587%
-- Time in Market: 86.6%
-- Avg Holding (bars): 70.0
+- Total Return: 1337678.43%
+- Ann. Return: 67.31%
+- Ann. Volatility: 107.97%
+- Sharpe Ratio: 0.62
+- Max Drawdown: 95.87%
+- Calmar Ratio: 0.70
+- Num Trades: 4594
+- Win Rate: 53.5%
+- Profit Factor: 2.02
+- Avg Trade Return: 0.345%
+- Avg Win: 1.277%
+- Avg Loss: -0.726%
+- Time in Market: 92.2%
+- Avg Holding (bars): 72.8
 - Excess Return: 0.00%
 - Info Ratio: 0.00
 
 **Valid**
 
-- Total Return: 1061.75%
-- Ann. Return: 22.68%
-- Ann. Volatility: 13.29%
-- Sharpe Ratio: 1.71
-- Max Drawdown: 14.63%
-- Calmar Ratio: 1.55
-- Num Trades: 2934
-- Win Rate: 56.6%
-- Profit Factor: 1.36
-- Avg Trade Return: 0.087%
-- Avg Win: 0.582%
-- Avg Loss: -0.560%
-- Time in Market: 85.7%
-- Avg Holding (bars): 68.8
+- Total Return: 43.96%
+- Ann. Return: 12.91%
+- Ann. Volatility: 29.03%
+- Sharpe Ratio: 0.44
+- Max Drawdown: 31.93%
+- Calmar Ratio: 0.40
+- Num Trades: 753
+- Win Rate: 53.5%
+- Profit Factor: 1.20
+- Avg Trade Return: 0.064%
+- Avg Win: 0.711%
+- Avg Loss: -0.680%
+- Time in Market: 91.6%
+- Avg Holding (bars): 71.6
 - Excess Return: 0.00%
 - Info Ratio: 0.00
 
 **Test**
 
-- Total Return: 355.81%
-- Ann. Return: 10.01%
-- Ann. Volatility: 14.46%
-- Sharpe Ratio: 0.69
-- Max Drawdown: 19.82%
-- Calmar Ratio: 0.51
-- Num Trades: 3866
-- Win Rate: 54.9%
-- Profit Factor: 1.15
-- Avg Trade Return: 0.044%
-- Avg Win: 0.604%
-- Avg Loss: -0.640%
-- Time in Market: 81.3%
-- Avg Holding (bars): 65.6
+- Total Return: -34.97%
+- Ann. Return: -10.26%
+- Ann. Volatility: 34.72%
+- Sharpe Ratio: -0.30
+- Max Drawdown: 61.53%
+- Calmar Ratio: -0.17
+- Num Trades: 994
+- Win Rate: 52.9%
+- Profit Factor: 0.99
+- Avg Trade Return: -0.005%
+- Avg Win: 0.729%
+- Avg Loss: -0.831%
+- Time in Market: 90.3%
+- Avg Holding (bars): 70.9
 - Excess Return: 0.00%
 - Info Ratio: 0.00
 
@@ -479,58 +488,58 @@ Generated: 2026-01-24 00:39:56
 
 **Train**
 
-- Total Return: 153619310986178.41%
-- Ann. Return: 46.23%
-- Ann. Volatility: 14.05%
-- Sharpe Ratio: 3.29
-- Max Drawdown: 18.69%
-- Calmar Ratio: 2.47
-- Num Trades: 17410
-- Win Rate: 57.3%
-- Profit Factor: 1.73
-- Avg Trade Return: 0.165%
-- Avg Win: 0.682%
-- Avg Loss: -0.527%
-- Time in Market: 83.4%
-- Avg Holding (bars): 69.4
+- Total Return: 22530454.94%
+- Ann. Return: 94.97%
+- Ann. Volatility: 79.66%
+- Sharpe Ratio: 1.19
+- Max Drawdown: 75.96%
+- Calmar Ratio: 1.25
+- Num Trades: 4545
+- Win Rate: 55.2%
+- Profit Factor: 2.25
+- Avg Trade Return: 0.362%
+- Avg Win: 1.179%
+- Avg Loss: -0.644%
+- Time in Market: 90.8%
+- Avg Holding (bars): 72.4
 - Excess Return: 0.00%
 - Info Ratio: 0.00
 
 **Valid**
 
-- Total Return: 1354.13%
-- Ann. Return: 24.99%
-- Ann. Volatility: 13.68%
-- Sharpe Ratio: 1.83
-- Max Drawdown: 16.75%
-- Calmar Ratio: 1.49
-- Num Trades: 2886
-- Win Rate: 57.4%
-- Profit Factor: 1.38
-- Avg Trade Return: 0.097%
-- Avg Win: 0.608%
-- Avg Loss: -0.591%
-- Time in Market: 84.8%
-- Avg Holding (bars): 69.2
+- Total Return: 32.72%
+- Ann. Return: 9.89%
+- Ann. Volatility: 20.75%
+- Sharpe Ratio: 0.48
+- Max Drawdown: 28.00%
+- Calmar Ratio: 0.35
+- Num Trades: 751
+- Win Rate: 54.2%
+- Profit Factor: 1.15
+- Avg Trade Return: 0.047%
+- Avg Win: 0.671%
+- Avg Loss: -0.691%
+- Time in Market: 93.4%
+- Avg Holding (bars): 73.2
 - Excess Return: 0.00%
 - Info Ratio: 0.00
 
 **Test**
 
-- Total Return: 233.00%
-- Ann. Return: 7.86%
-- Ann. Volatility: 14.76%
-- Sharpe Ratio: 0.53
-- Max Drawdown: 26.05%
-- Calmar Ratio: 0.30
-- Num Trades: 3784
-- Win Rate: 54.3%
-- Profit Factor: 1.12
-- Avg Trade Return: 0.036%
-- Avg Win: 0.626%
-- Avg Loss: -0.663%
-- Time in Market: 81.3%
-- Avg Holding (bars): 67.1
+- Total Return: -75.62%
+- Ann. Return: -29.88%
+- Ann. Volatility: 45.65%
+- Sharpe Ratio: -0.65
+- Max Drawdown: 82.65%
+- Calmar Ratio: -0.36
+- Num Trades: 992
+- Win Rate: 52.2%
+- Profit Factor: 0.84
+- Avg Trade Return: -0.074%
+- Avg Win: 0.755%
+- Avg Loss: -0.980%
+- Time in Market: 91.5%
+- Avg Holding (bars): 72.0
 - Excess Return: 0.00%
 - Info Ratio: 0.00
 
@@ -538,58 +547,58 @@ Generated: 2026-01-24 00:39:56
 
 **Train**
 
-- Total Return: 3596588003407.64%
-- Ann. Return: 38.98%
-- Ann. Volatility: 14.25%
-- Sharpe Ratio: 2.74
-- Max Drawdown: 22.86%
-- Calmar Ratio: 1.71
-- Num Trades: 17371
-- Win Rate: 56.6%
-- Profit Factor: 1.60
-- Avg Trade Return: 0.144%
-- Avg Win: 0.678%
-- Avg Loss: -0.552%
-- Time in Market: 82.8%
-- Avg Holding (bars): 69.1
+- Total Return: 226475.95%
+- Ann. Return: 51.97%
+- Ann. Volatility: 81.17%
+- Sharpe Ratio: 0.64
+- Max Drawdown: 93.74%
+- Calmar Ratio: 0.55
+- Num Trades: 4533
+- Win Rate: 54.3%
+- Profit Factor: 1.79
+- Avg Trade Return: 0.269%
+- Avg Win: 1.120%
+- Avg Loss: -0.743%
+- Time in Market: 90.6%
+- Avg Holding (bars): 72.4
 - Excess Return: 0.00%
 - Info Ratio: 0.00
 
 **Valid**
 
-- Total Return: 1475.24%
-- Ann. Return: 25.83%
-- Ann. Volatility: 13.36%
-- Sharpe Ratio: 1.93
-- Max Drawdown: 18.02%
-- Calmar Ratio: 1.43
-- Num Trades: 2866
-- Win Rate: 57.4%
-- Profit Factor: 1.41
-- Avg Trade Return: 0.100%
-- Avg Win: 0.596%
-- Avg Loss: -0.569%
-- Time in Market: 82.6%
-- Avg Holding (bars): 67.9
+- Total Return: 108.19%
+- Ann. Return: 27.69%
+- Ann. Volatility: 15.02%
+- Sharpe Ratio: 1.84
+- Max Drawdown: 10.47%
+- Calmar Ratio: 2.64
+- Num Trades: 749
+- Win Rate: 55.8%
+- Profit Factor: 1.37
+- Avg Trade Return: 0.102%
+- Avg Win: 0.679%
+- Avg Loss: -0.626%
+- Time in Market: 91.9%
+- Avg Holding (bars): 72.2
 - Excess Return: 0.00%
 - Info Ratio: 0.00
 
 **Test**
 
-- Total Return: 311.37%
-- Ann. Return: 9.30%
-- Ann. Volatility: 14.52%
-- Sharpe Ratio: 0.64
-- Max Drawdown: 27.31%
-- Calmar Ratio: 0.34
-- Num Trades: 3769
-- Win Rate: 56.3%
-- Profit Factor: 1.14
-- Avg Trade Return: 0.042%
-- Avg Win: 0.591%
-- Avg Loss: -0.665%
-- Time in Market: 78.1%
-- Avg Holding (bars): 64.7
+- Total Return: -81.78%
+- Ann. Return: -34.83%
+- Ann. Volatility: 45.71%
+- Sharpe Ratio: -0.76
+- Max Drawdown: 85.01%
+- Calmar Ratio: -0.41
+- Num Trades: 991
+- Win Rate: 53.5%
+- Profit Factor: 0.78
+- Avg Trade Return: -0.103%
+- Avg Win: 0.690%
+- Avg Loss: -1.015%
+- Time in Market: 88.9%
+- Avg Holding (bars): 70.0
 - Excess Return: 0.00%
 - Info Ratio: 0.00
 
