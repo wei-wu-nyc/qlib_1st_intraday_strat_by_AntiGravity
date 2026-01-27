@@ -263,6 +263,38 @@ This project successfully demonstrated that a **Mixture of Experts (MoE)** appro
 2.  **Robustness via Ensemble**: Combining LightGBM, XGBoost, and Random Forest into an Ensemble smoothed out predictions and improved out-of-sample consistency.
 3.  **Data Quality Matters**: The project highlighted the critical need for strict data cleaning (handling Infinities/NaNs) when moving from robust tree models (LGB) to more sensitive ones (XGB/RF).
 
+### 4. Horizon Sensitivity Analysis (Test Period 2022-2025)
+
+**Concept**: Tested varying holding periods `[12, 18, 24, 30, 36]` bars on the Ensemble MoE model to see if trends persist longer than the original 24-bar target.
+
+**Key Insights**:
+- **Afternoon Breakouts Run Long**: For **13:00 Afternoon** entries, extending the hold to **30 bars (2.5h)** yielded the best results (**35.93% Return**, **4.47 BP/trade**).
+- **Noon Persistence**: Mid-day (**12:00**) signals also benefited from longer holds (**36 bars** -> **22.28% Return**).
+- **Morning Reversion**: Morning signals (10:00) degraded with longer holds, suggesting they are quick reversion/breakout moves that shouldn't be married.
+
+![Horizon Sensitivity Dashboard](horizon_sensitivity_full_dashboard_1769552724805.png)
+
+## Conclusion
+
+This project successfully demonstrated that a **Mixture of Experts (MoE)** approach, specialized by time-of-day, delivers superior risk-adjusted returns compared to a single Global model for intraday trading.
+
+1.  **MoE Superiority**: Specialized models adapt to distinct market regimes (Open vs Mid-Day vs Close), recovering alpha that Global models average out.
+2.  **Robustness via Ensemble**: Combining LightGBM, XGBoost, and Random Forest into an Ensemble smoothed out predictions and improved out-of-sample consistency.
+3.  **Dynamic Horizons**: Signal duration varies by time of day—afternoon trends tend to persist longer than morning moves. Future work should implement dynamic exit rules based on entry time.
+
+### 5. Validation Period Analysis (2019-2021)
+
+**Prompted by User**, run the same Horizon Sensitivity analysis on the Validation period.
+
+**Key Finding: Regime Shift**
+- **Validation (2019-2021)**: Longer holding periods (24-36 bars) worked well for **Morning Entries**, suggesting a strong trend-following regime (Bull Market).
+- **Test (2022-2025)**: Morning trends degraded with longer holds (as shown in Section 4), suggesting a shift to mean-reversion or choppier morning sessions.
+- **Lesson**: One-size-fits-all holding periods are risky. A dynamic model (or one that detects regime) is superior.
+
+![Validation Horizon Dashboard](horizon_sensitivity_valid_dashboard_1769554739209.png)
+
+
+
 
 
 
