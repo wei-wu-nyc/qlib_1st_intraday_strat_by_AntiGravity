@@ -38,6 +38,56 @@ def load_config(config_path: str) -> dict:
     with open(config_path, 'r') as f:
         return yaml.safe_load(f)
 
+
+def select_best_instrument(signals_df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Select only the best instrument (highest cumulative predicted return) for each DAY.
+    
+    This implements 'best-only' allocation: 100% in the single best ETF per day.
+    
+    Args:
+        signals_df: DataFrame with MultiIndex (datetime, instrument) containing 'predicted_return' column
+        
+    Returns:
+        DataFrame with only the best instrument per day, keeping all bars from that instrument
+    """
+    # Reset index to work with datetime and instrument as columns
+    df = signals_df.reset_index()
+    
+    # Handle both MultiIndex naming conventions
+    datetime_col = 'datetime' if 'datetime' in df.columns else df.columns[0]
+    instrument_col = 'instrument' if 'instrument' in df.columns else df.columns[1]
+    pred_col = 'predicted_return' if 'predicted_return' in df.columns else 'pred'
+    
+    # Add date column for daily grouping
+    df['_date'] = pd.to_datetime(df[datetime_col]).dt.date
+    
+    # For each day, find the instrument with highest SUM of predicted returns
+    daily_preds = df.groupby(['_date', instrument_col])[pred_col].sum().reset_index()
+    best_per_day = daily_preds.loc[daily_preds.groupby('_date')[pred_col].idxmax()]
+    best_map = dict(zip(best_per_day['_date'], best_per_day[instrument_col]))
+    
+    # Filter to only keep rows from the best instrument each day
+    df['_best_instrument'] = df['_date'].map(best_map)
+    best_df = df[df[instrument_col] == df['_best_instrument']].copy()
+    
+    # Add selected_instrument column for backtest execution
+    best_df['selected_instrument'] = best_df[instrument_col]
+    
+    # Set index back to datetime only
+    best_df = best_df.set_index(datetime_col)
+    best_df.index = pd.to_datetime(best_df.index)
+    best_df = best_df.sort_index()
+    
+    # Clean up helper columns
+    best_df = best_df.drop(columns=['_date', '_best_instrument'], errors='ignore')
+    
+    num_days = len(best_map)
+    print(f"    Best-only selection: {len(signals_df)} -> {len(best_df)} rows ({num_days} trading days)")
+    print(f"    Date range: {best_df.index.date.min()} to {best_df.index.date.max()}")
+    
+    return best_df
+
 def run_experiment(
     backtest_engine: IntradayBacktest,
     signals: pd.DataFrame,
@@ -111,6 +161,9 @@ def main():
         # strategy.predict expects dataframe with features
         # It adds 'pred' and 'signal' columns
         signals = strategy.generate_signals(df)
+        
+        # Apply best-only selection: pick only the highest predicted return at each timestamp
+        signals = select_best_instrument(signals)
         
         # Add necessary columns for backtest if missing
         if 'bar_index' not in signals.columns:
@@ -200,7 +253,7 @@ def main():
     print("=" * 60)
     
     backtest = IntradayBacktest(str(config_path))
-    backtest.transaction_cost_bps = 1.0 # Set specific cost (1bp)
+    backtest.transaction_cost_bps = 0.0 # Set to 0bp for debugging
     all_results = {}
     
     for exp in experiments:

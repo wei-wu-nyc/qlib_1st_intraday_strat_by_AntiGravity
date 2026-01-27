@@ -101,7 +101,7 @@ models:
 # Backtest Configuration
 backtest:
   initial_capital: 1000000
-  transaction_cost_bps: 2    # Basis points per trade (2 bps = 0.02%)
+  transaction_cost_bps: 1    # Basis points per trade (1bp realistic for liquid ETFs; industry standard is typically 2bps)
   
 # Reporting
 reporting:

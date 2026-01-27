@@ -107,6 +107,60 @@ class IntradayBacktest:
         self.equity_curve: List[Tuple[pd.Timestamp, float]] = []
         self.daily_returns: List[float] = []
     
+    def _select_best_instrument_per_bar(self, signals: pd.DataFrame) -> pd.DataFrame:
+        """
+        Select best instrument for each DAY for multi-instrument data.
+        
+        Picks ONE instrument per day (highest sum of predicted_return across all bars),
+        then keeps all bars from that instrument for that day.
+        This ensures price continuity within each trading day.
+        
+        Args:
+            signals: DataFrame with MultiIndex (datetime, instrument)
+            
+        Returns:
+            DataFrame with single DatetimeIndex, one instrument per day
+        """
+        # Reset index to work with columns
+        df = signals.reset_index()
+        
+        # Identify column names
+        datetime_col = signals.index.names[0] if signals.index.names[0] else 'datetime'
+        instrument_col = signals.index.names[1] if signals.index.names[1] else 'instrument'
+        
+        # Add date column for daily grouping
+        df['_date'] = pd.to_datetime(df[datetime_col]).dt.date
+        
+        # Determine selection criterion
+        if 'predicted_return' in df.columns:
+            score_col = 'predicted_return'
+        elif 'signal_strength' in df.columns:
+            score_col = 'signal_strength'
+        else:
+            score_col = 'signal'
+        
+        # For each day, find instrument with highest SUM of scores
+        daily_scores = df.groupby(['_date', instrument_col])[score_col].sum().reset_index()
+        best_per_day = daily_scores.loc[daily_scores.groupby('_date')[score_col].idxmax()]
+        best_map = dict(zip(best_per_day['_date'], best_per_day[instrument_col]))
+        
+        # Filter to keep only rows from the best instrument each day
+        df['_best_instrument'] = df['_date'].map(best_map)
+        best_df = df[df[instrument_col] == df['_best_instrument']].copy()
+        
+        # Add selected_instrument column for tracking
+        best_df['selected_instrument'] = best_df[instrument_col]
+        
+        # Set datetime as index and sort
+        best_df = best_df.set_index(datetime_col)
+        best_df.index = pd.to_datetime(best_df.index)
+        best_df = best_df.sort_index()
+        
+        # Clean up helper columns
+        best_df = best_df.drop(columns=['_date', '_best_instrument'], errors='ignore')
+        
+        return best_df
+    
     def run(
         self,
         data: pd.DataFrame,
@@ -116,7 +170,7 @@ class IntradayBacktest:
         Run backtest.
         
         Args:
-            data: DataFrame with OHLCV and features, indexed by datetime
+            data: DataFrame with OHLCV and features, indexed by datetime (or MultiIndex datetime, instrument)
             signal_generator: Function that takes features and returns signals
             
         Returns:
@@ -133,8 +187,15 @@ class IntradayBacktest:
             if col not in signals.columns:
                 raise ValueError(f"Missing required column: {col}")
         
+        # Handle MultiIndex (datetime, instrument) - select best instrument per timestamp
+        if isinstance(signals.index, pd.MultiIndex):
+            signals = self._select_best_instrument_per_bar(signals)
+        
         # Add date column for grouping
         signals['_date'] = signals.index.date if isinstance(signals.index, pd.DatetimeIndex) else signals.index.get_level_values(0).date
+        
+        # Ensure data is sorted by timestamp
+        signals = signals.sort_index()
         
         # Process bar by bar
         prev_date = None
@@ -150,10 +211,10 @@ class IntradayBacktest:
             
             # Track new day
             if current_date != prev_date:
-                if prev_date is not None:
+                if prev_date is not None and daily_start_capital > 0:
                     daily_return = self.capital / daily_start_capital - 1
                     self.daily_returns.append(daily_return)
-                daily_start_capital = self.capital
+                daily_start_capital = max(self.capital, 1e-10)  # Guard against zero
                 prev_date = current_date
             
             # Check for forced EOD close

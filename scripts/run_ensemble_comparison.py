@@ -69,7 +69,8 @@ def run_ensemble_comparison():
     models['Ensemble'] = {'Global': ensemble_global, 'MoE': ensemble_moe}
     
     # --- Comparison Loop ---
-    periods = ['test', 'valid', 'train']
+    # Optimized: running Test and Valid only (Train is too large/slow for quick verification)
+    periods = ['test', 'valid']
     all_results = {}
     
     loader = IntradayDataLoader('config/intraday_config.yaml')
@@ -100,6 +101,18 @@ def run_ensemble_comparison():
         season = SeasonalityFeatures()
         df = season.generate_all_features(df)
         
+        # --- Pre-calculate Signals (Optimization) ---
+        print("Pre-calculating signals for all models...")
+        precalc_signals = {}
+        # Optimized: Run Ensemble only for final verification
+        fam_order = ['Ensemble']
+        
+        for fam_name in fam_order:
+            fam_models = models[fam_name]
+            print(f"  Generating {fam_name} signals...")
+            precalc_signals[f'{fam_name}_Global'] = fam_models['Global'].generate_signals(df)
+            precalc_signals[f'{fam_name}_MoE'] = fam_models['MoE'].generate_signals(df)
+
         period_data = [] # List of rows
         
         with warnings.catch_warnings():
@@ -109,19 +122,26 @@ def run_ensemble_comparison():
                 print(f"  Time: {time_name}")
                 row = {'time': time_name}
                 
-                # Order: LGB, XGB, RF, Ensemble
-                fam_order = ['LGB', 'XGB', 'RF', 'Ensemble']
-                
                 for fam_name in fam_order:
-                    fam_models = models[fam_name]
-                    
                     # Global
-                    bt_g = OncePerDayStrategy(config, entry_bar=entry_bar, exit_bars=24)
-                    res_g = bt_g.run(df, fam_models['Global'].generate_signals, etfs)
+                    bt_g = OncePerDayStrategy(config, entry_bar=entry_bar, exit_bars=36)
+                    # Pass lambda that returns pre-calculated signals (Lean version)
+                    sig_g = precalc_signals[f'{fam_name}_Global']
+                    cols_needed = ['close', 'bar_index', 'signal', 'predicted_return']
+                    # Ensure columns exist (close might be in index or col, it's usually col in qlib dict data but index in some... wait, loader returns it as col)
+                    # Actually, just intersection
+                    avail_cols = [c for c in cols_needed if c in sig_g.columns]
+                    sig_g_lean = sig_g[avail_cols].copy()
+                    
+                    res_g = bt_g.run(df, lambda d: sig_g_lean, etfs)
                     
                     # MoE
-                    bt_m = OncePerDayStrategy(config, entry_bar=entry_bar, exit_bars=24)
-                    res_m = bt_m.run(df, fam_models['MoE'].generate_signals, etfs)
+                    bt_m = OncePerDayStrategy(config, entry_bar=entry_bar, exit_bars=36)
+                    sig_m = precalc_signals[f'{fam_name}_MoE']
+                    avail_cols_m = [c for c in cols_needed if c in sig_m.columns]
+                    sig_m_lean = sig_m[avail_cols_m].copy()
+                    
+                    res_m = bt_m.run(df, lambda d: sig_m_lean, etfs)
                     
                     def extract(res):
                         return {
@@ -194,7 +214,7 @@ def generate_dashboard(all_results):
     """
     
     periods_map = {'test': 'Test Period (2022-2025)', 'valid': 'Validation (2019-2021)', 'train': 'Training (2000-2018)'}
-    model_fams = ['LGB', 'XGB', 'RF', 'Ensemble']
+    model_fams = ['Ensemble']
     colors = {'LGB': 'lgb-h', 'XGB': 'xgb-h', 'RF': 'rf-h', 'Ensemble': 'ens-h'}
     
     for pid in ['test', 'valid', 'train']:

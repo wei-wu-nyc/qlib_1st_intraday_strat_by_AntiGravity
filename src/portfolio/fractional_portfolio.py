@@ -95,6 +95,8 @@ class FractionalPortfolio:
             weights = self._signal_weighted(top_n)
         elif self.allocation_method == 'equal_weight':
             weights = self._equal_weight(top_n)
+        elif self.allocation_method == 'best_only':
+            weights = self._best_only(top_n)
         else:
             raise ValueError(f"Unknown allocation method: {self.allocation_method}")
         
@@ -159,6 +161,18 @@ class FractionalPortfolio:
         n = len(ranked_signals)
         weight = 1.0 / n
         return {inst: weight for inst, _ in ranked_signals}
+    
+    def _best_only(
+        self,
+        ranked_signals: List[Tuple[str, float]],
+    ) -> Dict[str, float]:
+        """Allocate 100% to the top-ranked instrument only."""
+        if not ranked_signals:
+            return {}
+        
+        # Take only the first (highest) signal
+        best_inst, _ = ranked_signals[0]
+        return {best_inst: 1.0}
     
     def _apply_min_weight(self, weights: Dict[str, float]) -> Dict[str, float]:
         """Apply minimum weight constraint, redistributing as needed."""
