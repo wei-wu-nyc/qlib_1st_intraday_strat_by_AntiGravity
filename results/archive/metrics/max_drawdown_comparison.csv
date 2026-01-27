@@ -1,0 +1,10 @@
+Strategy,Train,Valid,Test
+MomentumBreakout,36.52%,6.92%,68.63%
+MeanReversion,88.19%,23.90%,40.30%
+ORB,68.85%,22.79%,32.75%
+XGBoost_24bar,78.26%,29.28%,85.06%
+LightGBM_24bar,69.43%,49.12%,54.11%
+XGBoost_36bar,94.29%,28.05%,61.80%
+LightGBM_36bar,95.87%,31.93%,61.53%
+XGBoost_eod,75.96%,28.00%,82.65%
+LightGBM_eod,93.74%,10.47%,85.01%

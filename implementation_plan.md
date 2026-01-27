@@ -1,102 +1,42 @@
-# Extended Horizons, Benchmark Fix & Exit Rule Experiments (COMPLETED)
+# Model Refinement and Dashboard Enchancement Plan
 
-## Status: All Phases Complete ✅
-- **Phase 1**: Extended Horizons (24/36/EOD) -> Done.
-- **Phase 2**: Benchmark Metrics -> Done.
-- **Phase 3**: Exit Rule Experiments -> Done. (Winner: Combo Trail0.5% + Target2.0%)
+## Goal
+Reduce overfitting in current LightGBM models by training a "Robust" variant with constrained complexity (lower depth, higher estimators). Enhance the dashboard to include "Win Rate" for better performance evaluation.
 
-## Phase 1: Extended Horizons (Immediate)
+## User Review Required
+> [!IMPORTANT]
+> **New Model Parameters**: I am proposing the following parameters for the "Robust" model to specifically target the "crazy returns" seen in the training period (overfitting):
+> - `max_depth`: **3** (was 6) - *Limits tree complexity*
+> - `num_leaves`: **8** (was 31) - *Drastically reduces leaf nodes*
+> - `n_estimators`: **2000** (was 500) - *Increases ensemble size (weak learners)*
+> - `learning_rate`: **0.01** (was 0.05) - *Slower likelihood improvement to prevent memorization*
+> - `colsample_bytree`: **0.6** (was 0.8) - *More randomness in feature selection*
 
-### Goal
-Run ML models with horizons: 24-bar, 36-bar, and EOD (`ret_to_close`). Drop horizons < 24.
+## Proposed Changes
 
-### Changes
+### 1. Dashboard Enhancements
+**File**: `scripts/run_moe_backtest.py`
+- **Add Win Rate**: Extract `win_rate` from `BacktestResults` and display it in the HTML table as a percentage.
+- **Update Table Layout**: Add columns for "Win Rate" under each model section.
 
-#### [MODIFY] [intraday_config.yaml](file:///Volumes/SAMSUNG_2TB/WorkMac/AntiGravity/qlib_first_intraday_test/config/intraday_config.yaml)
-```yaml
-trading:
-  primary_label_horizon: 24
-  alternative_horizons:
-    - 36    # 3 hours
-    # EOD will use ret_to_close label
-```
+### 2. Robust Model Training
+**New File**: `scripts/train_robust_model.py`
+- Create a script to train the `LightGBMIntradayStrategy` with the new robust parameters.
+- Save the model to `results/models/lightgbm_robust`.
 
-#### [MODIFY] [run_all_strategies.py](file:///Volumes/SAMSUNG_2TB/WorkMac/AntiGravity/qlib_first_intraday_test/scripts/run_all_strategies.py)
-- Add special handling for EOD horizon using `ret_to_close` label
-- Update horizon loop: `[24, 36, 'eod']`
+### 3. Backtest Comparison
+**File**: `scripts/run_moe_backtest.py` (Renamed to `scripts/run_robust_comparison.py` or modified in place)
+- Integrate the new "Robust" model into the backtest loop.
+- **Comparison Visual**: Update the HTML dashboard to compare **Global (Baseline)** vs **Robust** vs **MoE**.
+    - This allows us to see if the "Robust" model fixes the training set overfitting while maintaining/improving test set performance.
 
----
+## Verification Plan
 
-## Phase 2: Benchmark Metrics Fix
+### Automated Tests
+- Run `scripts/train_robust_model.py` to generate the new model.
+- Run the updated backtest script to generate the `moe_full_dashboard.html`.
 
-### Goal
-Show Sharpe Ratio and Max Drawdown for Benchmark (SPY) in Performance Comparison table.
-
-#### [MODIFY] [dashboard.py](file:///Volumes/SAMSUNG_2TB/WorkMac/AntiGravity/qlib_first_intraday_test/src/reporting/dashboard.py)
-- Calculate benchmark Sharpe and MaxDD from equity curve data
-- Populate all metrics columns instead of just Ann. Return
-
----
-
-## Phase 3: Exit Rule Experimentation Framework
-
-### Exit Rules to Implement
-
-| Rule | Description | Parameters |
-|------|-------------|------------|
-| **Fixed Horizon** | Exit after N bars regardless of signal | `horizon_bars=12` |
-| **Negative Return Gate** | Exit if return < 0 after N bars | `gate_bars=12` |
-| **Stop Loss** | Exit if return drops below threshold | `stop_pct=-0.5%` |
-| **Trailing Stop** | Exit if return drops from peak | `trail_pct=-0.3%` |
-| **Profit Target** | Exit if return exceeds threshold | `target_pct=+0.5%` |
-
-### Suggested Parameter Ranges
-
-- **Stop Loss**: -0.1%, -0.3%, -0.5%, -1.0%
-- **Profit Target**: +0.3%, +0.5%, +1.0%
-- **Fixed Horizon**: 6, 12, 18, 24 bars
-- **Gate Horizon**: 6, 12 bars
-
-### Code Architecture for Efficient Experiments
-
-#### [NEW] [exit_rules.py](file:///Volumes/SAMSUNG_2TB/WorkMac/AntiGravity/qlib_first_intraday_test/src/backtest/exit_rules.py)
-- Define `ExitRule` base class with `should_exit(position, current_bar, current_price)` method
-- Implement: `FixedHorizonExit`, `StopLossExit`, `TrailingStopExit`, `ProfitTargetExit`, `NegativeGateExit`
-- Make exit rules composable (multiple rules can be combined)
-
-#### [MODIFY] [intraday_backtest.py](file:///Volumes/SAMSUNG_2TB/WorkMac/AntiGravity/qlib_first_intraday_test/src/backtest/intraday_backtest.py)
-- Accept `exit_rules: List[ExitRule]` in constructor
-- Apply exit rules in position check loop
-
-#### [NEW] [run_exit_experiments.py](file:///Volumes/SAMSUNG_2TB/WorkMac/AntiGravity/qlib_first_intraday_test/scripts/run_exit_experiments.py)
-- Load pre-trained models (no retraining)
-- Loop through exit rule configurations
-- Generate results with suffix: `LightGBM_24bar_sl0.5%`
-
-### Efficient Experiment Flow
-
-**Strategy**: To avoid dashboard clutter (3 horizons * 2 models * N exit rules = chaos), we will:
-1.  **Phase 3a (Deep Dive)**: Run ALL exit rule variations on the **Champion Model (`LightGBM_24bar`)**.
-2.  **Phase 3b (Validation)**: Apply the *best* performing exit rules to 36-bar and EOD models to verify robustness.
-
-### Dashboard Organization
-- Strategies will be named like `LightGBM_24bar_SL0.5` (Stop Loss 0.5%)
-- Dashboard will show these as variations of the base strategy.
-
-```
-1. Train models ONCE (already done)
-2. Save signals to CSV (precompute predictions)
-3. For each exit rule config:
-   - Load saved signals for LightGBM_24bar
-   - Run backtest with new exit rules
-   - Save metrics with config suffix
-4. Generate comparison dashboard
-```
-
----
-
-## Verification
-
-1. Run extended horizons (24, 36, EOD)
-2. Verify benchmark has all metrics in table
-3. Confirm exit rule framework works with one config
+### Manual Verification
+- **Check Overfitting**: Compare the "Total Return" in the **Train** period between Global and Robust models. The Robust model should have significantly *lower* (more realistic) training returns than the Global model.
+- **Check Generalization**: Compare performance in the **Test** period.
+- **Verify Win Rate**: Ensure the "Win Rate" column appears and looks correct (typically 50-55% for intraday).

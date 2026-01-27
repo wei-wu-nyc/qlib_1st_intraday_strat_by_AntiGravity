@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Model Comparison: Global vs Robust vs MoE</title>
+    <style>
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: #1a1a2e; color: #e8e8e8; padding: 40px; }
+        h1 { text-align: center; color: #00d9ff; font-size: 32px; margin-bottom: 10px; }
+        p { font-size: 18px; margin-bottom: 40px; }
+        h2 { color: #ccc; border-bottom: 2px solid #333; padding-bottom: 15px; margin-top: 60px; font-size: 24px; }
+        table { width: 100%; border-collapse: collapse; background: rgba(255,255,255,0.05); border-radius: 12px; margin-top: 20px; font-size: 14px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
+        th, td { padding: 12px 16px; text-align: right; border-bottom: 1px solid rgba(255,255,255,0.08); vertical-align: middle; }
+        th { background: rgba(0,217,255,0.15); color: #00d9ff; text-align: center; font-weight: 600; font-size: 15px; }
+        th:first-child, td:first-child { text-align: left; font-weight: 500; min-width: 140px; }
+        
+        .positive { color: #00ff88; font-weight: bold; }
+        .negative { color: #ff6666; font-weight: bold; }
+        .neutral { color: #aaa; }
+        
+        .group-header { font-size: 16px; letter-spacing: 1px; color: #fff; border-left: 1px solid rgba(255,255,255,0.1); }
+        .group-col { border-left: 1px solid rgba(255,255,255,0.05); }
+        
+        .g-col { background: rgba(255, 255, 255, 0.02); }
+        .r-col { background: rgba(255, 200, 0, 0.05); }
+        .m-col { background: rgba(0, 255, 136, 0.05); }
+        
+        .g-header { background: rgba(255, 255, 255, 0.1); color: #ddd; }
+        .r-header { background: rgba(255, 200, 0, 0.15); color: #ffcc00; }
+        .m-header { background: rgba(0, 255, 136, 0.15); color: #00ff88; }
+
+    </style>
+</head>
+<body>
+    <h1>🛡️ Robust vs Global vs MoE Comparison</h1>
+    <p style="text-align: center; color: #888">Evaluating Model Robustness and Win Rates across Market Regimes</p>
+    
+        <h2>Training Period (2000-2018)</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th rowspan="2">Time Period</th>
+                    <th colspan="4" class="group-header g-header">Global (Baseline)</th>
+                    <th colspan="4" class="group-header r-header">Robust (New)</th>
+                    <th colspan="4" class="group-header m-header">MoE (Specialized)</th>
+                </tr>
+                <tr>
+                    <!-- Global -->
+                    <th class="group-col g-col">Ret</th>
+                    <th class="g-col">BP/Trd</th>
+                    <th class="g-col">Win%</th>
+                    <th class="g-col">Trds</th>
+                    
+                    <!-- Robust -->
+                    <th class="group-col r-col">Ret</th>
+                    <th class="r-col">BP/Trd</th>
+                    <th class="r-col">Win%</th>
+                    <th class="r-col">Trds</th>
+                    
+                    <!-- MoE -->
+                    <th class="group-col m-col">Ret</th>
+                    <th class="m-col">BP/Trd</th>
+                    <th class="m-col">Win%</th>
+                    <th class="m-col">Trds</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>09:40 Open+10m</td>
+                    <td class="g-col positive">4234.51%</td><td class="g-col">12.42</td><td class="g-col">56.4%</td><td class="g-col">3372</td>
+                    <td class="r-col positive">223.81%</td><td class="r-col">5.24</td><td class="r-col">53.8%</td><td class="r-col">2936</td>
+                    <td class="m-col positive">385278.02%</td><td class="m-col">24.30</td><td class="m-col">62.8%</td><td class="m-col">3582</td>
+                </tr>
+                <tr>
+                    <td>10:00 Morning</td>
+                    <td class="g-col positive">3982.81%</td><td class="g-col">11.04</td><td class="g-col">56.1%</td><td class="g-col">3771</td>
+                    <td class="r-col positive">278.49%</td><td class="r-col">4.88</td><td class="r-col">54.3%</td><td class="r-col">3594</td>
+                    <td class="m-col positive">141595.97%</td><td class="m-col">20.88</td><td class="m-col">62.2%</td><td class="m-col">3691</td>
+                </tr>
+                <tr>
+                    <td>10:30 Late Morning</td>
+                    <td class="g-col positive">2454.35%</td><td class="g-col">9.67</td><td class="g-col">55.6%</td><td class="g-col">3799</td>
+                    <td class="r-col positive">279.47%</td><td class="r-col">4.96</td><td class="r-col">54.0%</td><td class="r-col">3490</td>
+                    <td class="m-col positive">15618.31%</td><td class="m-col">14.31</td><td class="m-col">59.2%</td><td class="m-col">3842</td>
+                </tr>
+                <tr>
+                    <td>12:00 Noon</td>
+                    <td class="g-col positive">1741.93%</td><td class="g-col">8.46</td><td class="g-col">56.5%</td><td class="g-col">3970</td>
+                    <td class="r-col positive">331.91%</td><td class="r-col">4.84</td><td class="r-col">54.4%</td><td class="r-col">3931</td>
+                    <td class="m-col positive">5153.75%</td><td class="m-col">11.62</td><td class="m-col">58.9%</td><td class="m-col">3778</td>
+                </tr>
+                <tr>
+                    <td>13:00 Afternoon</td>
+                    <td class="g-col positive">1907.68%</td><td class="g-col">8.65</td><td class="g-col">54.8%</td><td class="g-col">4013</td>
+                    <td class="r-col positive">185.70%</td><td class="r-col">3.78</td><td class="r-col">52.3%</td><td class="r-col">4005</td>
+                    <td class="m-col positive">12204.36%</td><td class="m-col">13.64</td><td class="m-col">58.0%</td><td class="m-col">3862</td>
+                </tr>
+                <tr>
+                    <td>14:00 Late Afternoon</td>
+                    <td class="g-col positive">3031.65%</td><td class="g-col">9.92</td><td class="g-col">56.8%</td><td class="g-col">3955</td>
+                    <td class="r-col positive">333.97%</td><td class="r-col">4.98</td><td class="r-col">55.0%</td><td class="r-col">3919</td>
+                    <td class="m-col positive">36323.15%</td><td class="m-col">16.73</td><td class="m-col">60.3%</td><td class="m-col">3806</td>
+                </tr>
+                <tr>
+                    <td>15:00 Market Close</td>
+                    <td class="g-col positive">845.58%</td><td class="g-col">6.92</td><td class="g-col">54.6%</td><td class="g-col">3879</td>
+                    <td class="r-col positive">92.10%</td><td class="r-col">2.81</td><td class="r-col">52.0%</td><td class="r-col">3916</td>
+                    <td class="m-col positive">6472.52%</td><td class="m-col">12.26</td><td class="m-col">59.5%</td><td class="m-col">3761</td>
+                </tr></tbody></table>
+        <h2>Validation Period (2019-2021)</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th rowspan="2">Time Period</th>
+                    <th colspan="4" class="group-header g-header">Global (Baseline)</th>
+                    <th colspan="4" class="group-header r-header">Robust (New)</th>
+                    <th colspan="4" class="group-header m-header">MoE (Specialized)</th>
+                </tr>
+                <tr>
+                    <!-- Global -->
+                    <th class="group-col g-col">Ret</th>
+                    <th class="g-col">BP/Trd</th>
+                    <th class="g-col">Win%</th>
+                    <th class="g-col">Trds</th>
+                    
+                    <!-- Robust -->
+                    <th class="group-col r-col">Ret</th>
+                    <th class="r-col">BP/Trd</th>
+                    <th class="r-col">Win%</th>
+                    <th class="r-col">Trds</th>
+                    
+                    <!-- MoE -->
+                    <th class="group-col m-col">Ret</th>
+                    <th class="m-col">BP/Trd</th>
+                    <th class="m-col">Win%</th>
+                    <th class="m-col">Trds</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>09:40 Open+10m</td>
+                    <td class="g-col positive">18.63%</td><td class="g-col">4.78</td><td class="g-col">55.0%</td><td class="g-col">473</td>
+                    <td class="r-col positive">13.11%</td><td class="r-col">4.18</td><td class="r-col">54.2%</td><td class="r-col">413</td>
+                    <td class="m-col positive">45.03%</td><td class="m-col">7.30</td><td class="m-col">54.2%</td><td class="m-col">605</td>
+                </tr>
+                <tr>
+                    <td>10:00 Morning</td>
+                    <td class="g-col positive">12.37%</td><td class="g-col">3.13</td><td class="g-col">55.8%</td><td class="g-col">593</td>
+                    <td class="r-col positive">6.15%</td><td class="r-col">2.42</td><td class="r-col">55.7%</td><td class="r-col">481</td>
+                    <td class="m-col positive">24.79%</td><td class="m-col">4.57</td><td class="m-col">56.5%</td><td class="m-col">653</td>
+                </tr>
+                <tr>
+                    <td>10:30 Late Morning</td>
+                    <td class="g-col positive">31.33%</td><td class="g-col">6.01</td><td class="g-col">56.0%</td><td class="g-col">559</td>
+                    <td class="r-col positive">28.85%</td><td class="r-col">6.36</td><td class="r-col">55.7%</td><td class="r-col">485</td>
+                    <td class="m-col positive">27.94%</td><td class="m-col">4.99</td><td class="m-col">57.9%</td><td class="m-col">636</td>
+                </tr>
+                <tr>
+                    <td>12:00 Noon</td>
+                    <td class="g-col positive">14.16%</td><td class="g-col">3.19</td><td class="g-col">58.4%</td><td class="g-col">639</td>
+                    <td class="r-col positive">14.29%</td><td class="r-col">3.18</td><td class="r-col">58.0%</td><td class="r-col">648</td>
+                    <td class="m-col positive">27.72%</td><td class="m-col">4.96</td><td class="m-col">60.2%</td><td class="m-col">636</td>
+                </tr>
+                <tr>
+                    <td>13:00 Afternoon</td>
+                    <td class="g-col positive">9.71%</td><td class="g-col">2.43</td><td class="g-col">54.5%</td><td class="g-col">685</td>
+                    <td class="r-col positive">9.27%</td><td class="r-col">2.38</td><td class="r-col">56.0%</td><td class="r-col">686</td>
+                    <td class="m-col positive">4.01%</td><td class="m-col">1.65</td><td class="m-col">55.3%</td><td class="m-col">696</td>
+                </tr>
+                <tr>
+                    <td>14:00 Late Afternoon</td>
+                    <td class="g-col positive">4.01%</td><td class="g-col">1.74</td><td class="g-col">53.2%</td><td class="g-col">688</td>
+                    <td class="r-col positive">2.72%</td><td class="r-col">1.58</td><td class="r-col">52.3%</td><td class="r-col">669</td>
+                    <td class="m-col positive">8.69%</td><td class="m-col">2.43</td><td class="m-col">53.5%</td><td class="m-col">662</td>
+                </tr>
+                <tr>
+                    <td>15:00 Market Close</td>
+                    <td class="g-col negative">-5.87%</td><td class="g-col">0.20</td><td class="g-col">50.0%</td><td class="g-col">680</td>
+                    <td class="r-col negative">-16.45%</td><td class="r-col">-1.54</td><td class="r-col">47.3%</td><td class="r-col">683</td>
+                    <td class="m-col positive">2.82%</td><td class="m-col">1.52</td><td class="m-col">52.1%</td><td class="m-col">654</td>
+                </tr></tbody></table>
+        <h2>Test Period (2022-2025)</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th rowspan="2">Time Period</th>
+                    <th colspan="4" class="group-header g-header">Global (Baseline)</th>
+                    <th colspan="4" class="group-header r-header">Robust (New)</th>
+                    <th colspan="4" class="group-header m-header">MoE (Specialized)</th>
+                </tr>
+                <tr>
+                    <!-- Global -->
+                    <th class="group-col g-col">Ret</th>
+                    <th class="g-col">BP/Trd</th>
+                    <th class="g-col">Win%</th>
+                    <th class="g-col">Trds</th>
+                    
+                    <!-- Robust -->
+                    <th class="group-col r-col">Ret</th>
+                    <th class="r-col">BP/Trd</th>
+                    <th class="r-col">Win%</th>
+                    <th class="r-col">Trds</th>
+                    
+                    <!-- MoE -->
+                    <th class="group-col m-col">Ret</th>
+                    <th class="m-col">BP/Trd</th>
+                    <th class="m-col">Win%</th>
+                    <th class="m-col">Trds</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>09:40 Open+10m</td>
+                    <td class="g-col negative">-13.55%</td><td class="g-col">-1.73</td><td class="g-col">48.9%</td><td class="g-col">503</td>
+                    <td class="r-col negative">-20.56%</td><td class="r-col">-4.85</td><td class="r-col">47.4%</td><td class="r-col">384</td>
+                    <td class="m-col negative">-12.17%</td><td class="m-col">-0.48</td><td class="m-col">51.3%</td><td class="m-col">779</td>
+                </tr>
+                <tr>
+                    <td>10:00 Morning</td>
+                    <td class="g-col positive">18.36%</td><td class="g-col">3.67</td><td class="g-col">55.9%</td><td class="g-col">665</td>
+                    <td class="r-col negative">-5.77%</td><td class="r-col">-0.10</td><td class="r-col">52.0%</td><td class="r-col">483</td>
+                    <td class="m-col positive">11.32%</td><td class="m-col">2.40</td><td class="m-col">54.9%</td><td class="m-col">860</td>
+                </tr>
+                <tr>
+                    <td>10:30 Late Morning</td>
+                    <td class="g-col negative">-4.78%</td><td class="g-col">0.46</td><td class="g-col">47.8%</td><td class="g-col">726</td>
+                    <td class="r-col negative">-5.17%</td><td class="r-col">0.20</td><td class="r-col">50.2%</td><td class="r-col">558</td>
+                    <td class="m-col positive">2.32%</td><td class="m-col">1.39</td><td class="m-col">50.2%</td><td class="m-col">819</td>
+                </tr>
+                <tr>
+                    <td>12:00 Noon</td>
+                    <td class="g-col positive">8.81%</td><td class="g-col">2.17</td><td class="g-col">53.9%</td><td class="g-col">826</td>
+                    <td class="r-col positive">6.93%</td><td class="r-col">1.86</td><td class="r-col">54.1%</td><td class="r-col">869</td>
+                    <td class="m-col positive">8.26%</td><td class="m-col">2.11</td><td class="m-col">53.2%</td><td class="m-col">821</td>
+                </tr>
+                <tr>
+                    <td>13:00 Afternoon</td>
+                    <td class="g-col positive">12.72%</td><td class="g-col">2.44</td><td class="g-col">55.1%</td><td class="g-col">902</td>
+                    <td class="r-col positive">4.36%</td><td class="r-col">1.57</td><td class="r-col">52.8%</td><td class="r-col">907</td>
+                    <td class="m-col positive">40.21%</td><td class="m-col">4.80</td><td class="m-col">55.6%</td><td class="m-col">922</td>
+                </tr>
+                <tr>
+                    <td>14:00 Late Afternoon</td>
+                    <td class="g-col positive">9.42%</td><td class="g-col">2.08</td><td class="g-col">53.0%</td><td class="g-col">912</td>
+                    <td class="r-col negative">-4.78%</td><td class="r-col">0.58</td><td class="r-col">51.0%</td><td class="r-col">927</td>
+                    <td class="m-col positive">16.33%</td><td class="m-col">2.79</td><td class="m-col">53.2%</td><td class="m-col">886</td>
+                </tr>
+                <tr>
+                    <td>15:00 Market Close</td>
+                    <td class="g-col negative">-17.36%</td><td class="g-col">-1.03</td><td class="g-col">48.0%</td><td class="g-col">910</td>
+                    <td class="r-col negative">-21.76%</td><td class="r-col">-1.52</td><td class="r-col">46.5%</td><td class="r-col">948</td>
+                    <td class="m-col negative">-4.04%</td><td class="m-col">0.59</td><td class="m-col">51.3%</td><td class="m-col">879</td>
+                </tr></tbody></table></body></html>

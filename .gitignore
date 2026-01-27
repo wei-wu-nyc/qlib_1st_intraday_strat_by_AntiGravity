@@ -40,3 +40,7 @@ results/trades/
 results/charts/
 results/dashboard.html
 # Keep results/documentation_assets and results/strategy_report.md
+results/archive/metrics/exit_experiments_equity.csv
+results/archive/metrics/equity_curves.csv
+results/archive/metrics/exit_experiments_equity.csv
+results/archive/metrics/equity_curves.csv

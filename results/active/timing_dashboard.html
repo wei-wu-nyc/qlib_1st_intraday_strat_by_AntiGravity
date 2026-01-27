@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Timing Analysis (24-bar Exit)</title>
+    <style>
+        body { font-family: sans-serif; background: #1a1a2e; color: #e8e8e8; padding: 20px; }
+        h1 { text-align: center; color: #00d9ff; }
+        table { width: 100%; border-collapse: collapse; background: rgba(255,255,255,0.05); border-radius: 8px; overflow: hidden; margin-top: 20px; }
+        th, td { padding: 12px 20px; text-align: right; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        th { background: rgba(0,217,255,0.1); color: #00d9ff; text-align: left; }
+        th:first-child, td:first-child { text-align: left; }
+        .positive { color: #00ff88; }
+        .negative { color: #ff4444; }
+        .best-row { background: rgba(0, 255, 136, 0.15); }
+        .bar-container { width: 60px; height: 4px; background: rgba(255,255,255,0.1); display: inline-block; vertical-align: middle; margin-left: 10px; }
+        .bar-fill { height: 100%; }
+    </style>
+</head>
+<body>
+    <h1>⏱️ Timing Analysis (Max 24-Bar Hold)</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Entry Time</th>
+                <th>Avg Return/Trade</th>
+                <th>Win Rate</th>
+                <th>Total Return</th>
+                <th>Sharpe</th>
+                <th>Trades</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="">
+                <td>09:40 Open+10m</td>
+                <td>
+                    <span class="negative">-0.73 bp</span>
+                    <div class="bar-container"><div class="bar-fill" style="width:14.59999942779541%; background:#ff4444"></div></div>
+                </td>
+                <td>50.7%</td>
+                <td class="negative">-4.4%</td>
+                <td>-0.14</td>
+                <td>503</td>
+            </tr>
+            <tr class="best-row">
+                <td>10:00 Morning</td>
+                <td>
+                    <span class="positive">4.67 bp</span>
+                    <div class="bar-container"><div class="bar-fill" style="width:93.4000015258789%; background:#00ff88"></div></div>
+                </td>
+                <td>56.4%</td>
+                <td class="positive">35.2%</td>
+                <td>1.18</td>
+                <td>665</td>
+            </tr>
+            <tr class="">
+                <td>10:30 Late Morning</td>
+                <td>
+                    <span class="positive">1.46 bp</span>
+                    <div class="bar-container"><div class="bar-fill" style="width:29.19999885559082%; background:#00ff88"></div></div>
+                </td>
+                <td>48.9%</td>
+                <td class="positive">10.1%</td>
+                <td>0.38</td>
+                <td>726</td>
+            </tr>
+            <tr class="">
+                <td>12:00 Noon</td>
+                <td>
+                    <span class="positive">0.01 bp</span>
+                    <div class="bar-container"><div class="bar-fill" style="width:0.2%; background:#00ff88"></div></div>
+                </td>
+                <td>26.3%</td>
+                <td class="negative">-100.0%</td>
+                <td>-0.73</td>
+                <td>824</td>
+            </tr>
+            <tr class="">
+                <td>13:00 Afternoon</td>
+                <td>
+                    <span class="positive">0.91 bp</span>
+                    <div class="bar-container"><div class="bar-fill" style="width:18.2%; background:#00ff88"></div></div>
+                </td>
+                <td>25.9%</td>
+                <td class="negative">-100.0%</td>
+                <td>-0.66</td>
+                <td>899</td>
+            </tr>
+            <tr class="best-row">
+                <td>14:00 Late Afternoon</td>
+                <td>
+                    <span class="positive">3.08 bp</span>
+                    <div class="bar-container"><div class="bar-fill" style="width:61.599998474121094%; background:#00ff88"></div></div>
+                </td>
+                <td>54.9%</td>
+                <td class="positive">31.32%</td>
+                <td>1.08</td>
+                <td>912</td>
+            </tr>
+            <tr class="">
+                <td>Any Time (First Signal)</td>
+                <td>
+                    <span class="positive">1.02 bp</span>
+                    <div class="bar-container"><div class="bar-fill" style="width:20.399999618530273%; background:#00ff88"></div></div>
+                </td>
+                <td>50.1%</td>
+                <td class="positive">8.51%</td>
+                <td>0.26</td>
+                <td>1001</td>
+            </tr>
+            <tr style="opacity: 0.7">
+                <td>SPY Benchmark</td>
+                <td>-</td>
+                <td>-</td>
+                <td class="positive">43.99%</td>
+                <td>-</td>
+                <td>1</td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>

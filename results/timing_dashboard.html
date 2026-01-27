@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Entry Timing Strategy Dashboard (24-bar Exit)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            color: #e8e8e8;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, #00d9ff, #00ff88);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #888;
+            margin-bottom: 40px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        th,
+        td {
+            padding: 16px 24px;
+            text-align: right;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        th {
+            background: rgba(0, 217, 255, 0.1);
+            color: #00d9ff;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        th:first-child {
+            text-align: left;
+        }
+
+        td:first-child {
+            text-align: left;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .positive {
+            color: #00ff88;
+        }
+
+        .negative {
+            color: #ff4444;
+        }
+
+        .neutral {
+            color: #ffd93d;
+        }
+
+        .best-row {
+            background: rgba(0, 255, 136, 0.15);
+        }
+
+        .highlight {
+            font-weight: 700;
+        }
+
+        .bar-container {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 8px;
+        }
+
+        .bar-fill {
+            height: 100%;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>⏱️ Once-Per-Day Strategy Timing</h1>
+        <p class="subtitle">Comparison of entry times with <strong>24-bar (2 hour) Max Holding Rule</strong></p>
+
+        <table id="metrics">
+            <thead>
+                <tr>
+                    <th>Entry Time</th>
+                    <th>Avg Return / Trade</th>
+                    <th>Win Rate</th>
+                    <th>Total Return</th>
+                    <th>Sharpe</th>
+                    <th>Trades</th>
+                    <th>Avg Holding</th>
+                </tr>
+            </thead>
+            <tbody id="tbody"></tbody>
+        </table>
+    </div>
+
+    <script>
+        fetch('timing_dashboard_data.json').then(r => r.json()).then(data => {
+            const tbody = document.getElementById('tbody');
+
+            // Sort chronologically (except 'Any Time' last)
+            const entries = Object.entries(data.strategies).sort((a, b) => {
+                if (a[0].includes("Any")) return 1;
+                if (b[0].includes("Any")) return -1;
+                return a[0].localeCompare(b[0]);
+            });
+
+            entries.forEach(([name, s]) => {
+                const isBest = s.avg_ret_bp > 2.0;
+                const retClass = s.avg_ret_bp > 0 ? 'positive' : 'negative';
+                const totalRetClass = s.ret > 0 ? 'positive' : 'negative';
+
+                // Visual bar for avg return
+                const maxBp = 4.0;
+                const barWidth = Math.min(Math.abs(s.avg_ret_bp) / maxBp * 100, 100);
+                const barColor = s.avg_ret_bp > 0 ? '#00ff88' : '#ff4444';
+
+                tbody.innerHTML += `
+                    <tr class="${isBest ? 'best-row' : ''}">
+                        <td>${name}</td>
+                        <td>
+                            <div class="${retClass} highlight">${s.avg_ret_bp} bp</div>
+                            <div class="bar-container">
+                                <div class="bar-fill" style="width: ${barWidth}%; background: ${barColor};"></div>
+                            </div>
+                        </td>
+                        <td>${s.win_rate}%</td>
+                        <td class="${totalRetClass}">${s.ret > -99 ? s.ret + '%' : 'N/A (-100% bug)'}</td>
+                        <td>${s.sr}</td>
+                        <td>${s.trades}</td>
+                        <td>${s.hold_bars} bars</td>
+                    </tr>
+                `;
+            });
+
+            // Benchmark
+            tbody.innerHTML += `
+                <tr style="background: rgba(255,255,255,0.02)">
+                    <td>SPY Buy & Hold</td>
+                    <td class="neutral">-</td>
+                    <td>-</td>
+                    <td class="positive">${data.benchmark}%</td>
+                    <td>-</td>
+                    <td>1</td>
+                    <td>ALL</td>
+                </tr>
+            `;
+        });
+    </script>
+</body>
+
+</html>
