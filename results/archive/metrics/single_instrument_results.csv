@@ -1,0 +1,17 @@
+Strategy,Instrument,Ann_Return,Sharpe,Trades,Total_Return
+LightGBM_24bar,SPY,5.70%,0.51,933,24.65%
+LightGBM_24bar,QQQ,13.55%,0.90,986,65.71%
+LightGBM_24bar,DIA,0.26%,0.02,988,1.05%
+LightGBM_24bar,IWM,1.73%,0.10,980,7.04%
+LightGBM_36bar,SPY,7.24%,0.60,921,32.06%
+LightGBM_36bar,QQQ,13.32%,0.81,982,64.42%
+LightGBM_36bar,DIA,-2.43%,-0.20,986,-9.31%
+LightGBM_36bar,IWM,1.68%,0.10,977,6.84%
+XGBoost_24bar,SPY,6.46%,0.53,933,28.27%
+XGBoost_24bar,QQQ,12.52%,0.78,982,59.82%
+XGBoost_24bar,DIA,-2.28%,-0.20,988,-8.76%
+XGBoost_24bar,IWM,-3.82%,-0.23,988,-14.34%
+XGBoost_36bar,SPY,4.47%,0.36,929,18.99%
+XGBoost_36bar,QQQ,6.64%,0.39,984,29.15%
+XGBoost_36bar,DIA,-4.34%,-0.36,984,-16.19%
+XGBoost_36bar,IWM,-0.42%,-0.03,980,-1.68%

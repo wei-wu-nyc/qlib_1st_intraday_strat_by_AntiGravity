@@ -1,0 +1,13 @@
+Strategy,Instrument,Ann_Return,Sharpe,Trades
+MomentumBreakout,SPY,-1.53%,-0.66,416
+MomentumBreakout,QQQ,-2.77%,-0.79,499
+MomentumBreakout,DIA,-1.32%,-0.53,426
+MomentumBreakout,IWM,-4.36%,-0.99,406
+MeanReversion,SPY,-6.05%,-0.93,863
+MeanReversion,QQQ,-7.65%,-0.91,866
+MeanReversion,DIA,-4.85%,-0.88,875
+MeanReversion,IWM,-4.31%,-0.50,875
+ORB,SPY,-1.88%,-0.29,1450
+ORB,QQQ,-2.85%,-0.33,1044
+ORB,DIA,-2.27%,-0.39,1049
+ORB,IWM,-0.64%,-0.07,829

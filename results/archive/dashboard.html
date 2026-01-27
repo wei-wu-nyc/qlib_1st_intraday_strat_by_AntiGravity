@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Intraday Strategy Performance</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            color: #e8e8e8;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2.2rem;
+            margin-bottom: 30px;
+            background: linear-gradient(90deg, #00d9ff, #00ff88);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        @media (max-width: 900px) {
+            .metrics-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 24px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .card h3 {
+            font-size: 1rem;
+            color: #888;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .stat-row:last-child {
+            border-bottom: none;
+        }
+
+        .stat-label {
+            color: #aaa;
+            font-size: 0.9rem;
+        }
+
+        .stat-value {
+            font-weight: 700;
+        }
+
+        .positive {
+            color: #00ff88;
+        }
+
+        .negative {
+            color: #ff4444;
+        }
+
+        .neutral {
+            color: #ffd93d;
+        }
+
+        .chart-container {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .chart-title {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            color: #00d9ff;
+        }
+
+        .chart-wrapper {
+            position: relative;
+            height: 450px;
+        }
+
+        .legend {
+            display: flex;
+            gap: 24px;
+            margin-top: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .legend-color {
+            width: 20px;
+            height: 4px;
+            border-radius: 2px;
+        }
+
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .two-col {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .trade-bar {
+            height: 28px;
+            border-radius: 4px;
+            margin: 8px 0;
+            display: flex;
+            align-items: center;
+            padding-left: 12px;
+            font-size: 0.9rem;
+            color: #1a1a2e;
+            font-weight: 600;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>🚀 Intraday Strategy Performance</h1>
+
+        <div class="metrics-grid">
+            <div class="card">
+                <h3>🎯 Best-Per-Bar</h3>
+                <div class="stat-row"><span class="stat-label">Total Return</span><span class="stat-value positive"
+                        id="bpb-ret">-</span></div>
+                <div class="stat-row"><span class="stat-label">Annualized</span><span class="stat-value positive"
+                        id="bpb-ann">-</span></div>
+                <div class="stat-row"><span class="stat-label">Sharpe Ratio</span><span class="stat-value"
+                        id="bpb-sr">-</span></div>
+                <div class="stat-row"><span class="stat-label">Max Drawdown</span><span class="stat-value negative"
+                        id="bpb-dd">-</span></div>
+                <div class="stat-row"><span class="stat-label">Trades</span><span class="stat-value" id="bpb-n">-</span>
+                </div>
+                <div class="stat-row"><span class="stat-label">Win Rate</span><span class="stat-value"
+                        id="bpb-wr">-</span></div>
+            </div>
+
+            <div class="card">
+                <h3>⚖️ Equal-Weight</h3>
+                <div class="stat-row"><span class="stat-label">Total Return</span><span class="stat-value positive"
+                        id="eq-ret">-</span></div>
+                <div class="stat-row"><span class="stat-label">Annualized</span><span class="stat-value positive"
+                        id="eq-ann">-</span></div>
+                <div class="stat-row"><span class="stat-label">Sharpe Ratio</span><span class="stat-value"
+                        id="eq-sr">-</span></div>
+                <div class="stat-row"><span class="stat-label">Max Drawdown</span><span class="stat-value negative"
+                        id="eq-dd">-</span></div>
+                <div class="stat-row"><span class="stat-label">Trades</span><span class="stat-value" id="eq-n">-</span>
+                </div>
+                <div class="stat-row"><span class="stat-label">Win Rate</span><span class="stat-value"
+                        id="eq-wr">-</span></div>
+            </div>
+
+            <div class="card">
+                <h3>📊 SPY Buy & Hold</h3>
+                <div class="stat-row"><span class="stat-label">Total Return</span><span class="stat-value neutral"
+                        id="bm-ret">-</span></div>
+                <div class="stat-row"><span class="stat-label">Strategy Alpha (BPB)</span><span
+                        class="stat-value positive" id="alpha-bpb">-</span></div>
+                <div class="stat-row"><span class="stat-label">Strategy Alpha (EQ)</span><span
+                        class="stat-value positive" id="alpha-eq">-</span></div>
+            </div>
+        </div>
+
+        <div class="chart-container">
+            <div class="chart-title">📈 Equity Curve Comparison</div>
+            <div class="chart-wrapper">
+                <canvas id="equityChart"></canvas>
+            </div>
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #00ff88;"></div><span>Best-Per-Bar</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #00d9ff;"></div><span>Equal-Weight</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #ffd93d;"></div><span>SPY B&H (Benchmark)</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="two-col">
+            <div class="card">
+                <h3>Trades by Instrument</h3>
+                <div id="inst-bars"></div>
+            </div>
+            <div class="card">
+                <h3>Exit Reasons</h3>
+                <div class="chart-wrapper" style="height: 250px;"><canvas id="exitChart"></canvas></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        fetch('dashboard_data.json').then(r => r.json()).then(data => {
+            // Metrics
+            document.getElementById('bpb-ret').textContent = data.bpb.ret + '%';
+            document.getElementById('bpb-ann').textContent = data.bpb.ann + '%';
+            document.getElementById('bpb-sr').textContent = data.bpb.sr;
+            document.getElementById('bpb-dd').textContent = data.bpb.dd + '%';
+            document.getElementById('bpb-n').textContent = data.bpb.n.toLocaleString();
+            document.getElementById('bpb-wr').textContent = data.bpb.wr + '%';
+
+            document.getElementById('eq-ret').textContent = data.eq.ret + '%';
+            document.getElementById('eq-ann').textContent = data.eq.ann + '%';
+            document.getElementById('eq-sr').textContent = data.eq.sr;
+            document.getElementById('eq-dd').textContent = data.eq.dd + '%';
+            document.getElementById('eq-n').textContent = data.eq.n.toLocaleString();
+            document.getElementById('eq-wr').textContent = data.eq.wr + '%';
+
+            document.getElementById('bm-ret').textContent = data.bm.ret + '%';
+            document.getElementById('alpha-bpb').textContent = '+' + (data.bpb.ret - data.bm.ret).toFixed(1) + '%';
+            document.getElementById('alpha-eq').textContent = '+' + (data.eq.ret - data.bm.ret).toFixed(1) + '%';
+
+            // Equity chart
+            const labels = data.curve.map(d => d.d);
+            new Chart(document.getElementById('equityChart'), {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Best-Per-Bar',
+                        data: data.curve.map(d => d.bpb),
+                        borderColor: '#00ff88',
+                        backgroundColor: 'rgba(0,255,136,0.1)',
+                        fill: false,
+                        tension: 0.1,
+                        pointRadius: 0,
+                        borderWidth: 2
+                    }, {
+                        label: 'Equal-Weight',
+                        data: data.curve.map(d => d.eq),
+                        borderColor: '#00d9ff',
+                        backgroundColor: 'rgba(0,217,255,0.1)',
+                        fill: false,
+                        tension: 0.1,
+                        pointRadius: 0,
+                        borderWidth: 2
+                    }, {
+                        label: 'SPY B&H',
+                        data: data.curve.map(d => d.bm),
+                        borderColor: '#ffd93d',
+                        backgroundColor: 'rgba(255,217,61,0.1)',
+                        fill: false,
+                        tension: 0.1,
+                        pointRadius: 0,
+                        borderWidth: 2,
+                        borderDash: [5, 5]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#888', maxTicksLimit: 12 } },
+                        y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#888', callback: v => '$' + (v / 1e6).toFixed(2) + 'M' } }
+                    }
+                }
+            });
+
+            // Trades by instrument
+            const colors = { SPY: '#00ff88', QQQ: '#00d9ff', DIA: '#ff6b6b', IWM: '#ffd93d' };
+            const maxC = Math.max(...Object.values(data.inst).map(t => t.count));
+            let html = '';
+            for (const [inst, s] of Object.entries(data.inst)) {
+                html += `<div class="trade-bar" style="background: ${colors[inst]}; width: ${s.count / maxC * 100}%;">${inst}: ${s.count.toLocaleString()}</div>`;
+            }
+            document.getElementById('inst-bars').innerHTML = html;
+
+            // Exit chart
+            new Chart(document.getElementById('exitChart'), {
+                type: 'doughnut',
+                data: { labels: Object.keys(data.exit), datasets: [{ data: Object.values(data.exit), backgroundColor: ['#00ff88', '#00d9ff', '#ff6b6b', '#ffd93d'] }] },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right', labels: { color: '#888' } } } }
+            });
+        });
+    </script>
+</body>
+
+</html>

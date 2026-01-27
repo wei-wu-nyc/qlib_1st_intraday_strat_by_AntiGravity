@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Strategy Comparison Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            color: #e8e8e8;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 20px;
+            background: linear-gradient(90deg, #00d9ff, #00ff88);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #888;
+            margin-bottom: 30px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            overflow: hidden;
+        }
+
+        th,
+        td {
+            padding: 14px 20px;
+            text-align: right;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        th {
+            background: rgba(255, 255, 255, 0.08);
+            color: #00d9ff;
+            text-align: left;
+        }
+
+        th:first-child {
+            text-align: left;
+        }
+
+        td:first-child {
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .positive {
+            color: #00ff88;
+        }
+
+        .negative {
+            color: #ff4444;
+        }
+
+        .neutral {
+            color: #ffd93d;
+        }
+
+        .best {
+            background: rgba(0, 255, 136, 0.15);
+        }
+
+        .chart-container {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .chart-title {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            color: #00d9ff;
+        }
+
+        .chart-wrapper {
+            position: relative;
+            height: 500px;
+        }
+
+        .legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-top: 15px;
+            justify-content: center;
+            font-size: 0.9rem;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .legend-color {
+            width: 16px;
+            height: 4px;
+            border-radius: 2px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>📊 Strategy Comparison (1bp Transaction Cost)</h1>
+        <p class="subtitle">All strategies tested with 1 basis point round-trip transaction cost</p>
+
+        <table id="metrics">
+            <thead>
+                <tr>
+                    <th>Strategy</th>
+                    <th>Return</th>
+                    <th>Annualized</th>
+                    <th>Sharpe</th>
+                    <th>Max DD</th>
+                    <th>Trades</th>
+                    <th>Win Rate</th>
+                </tr>
+            </thead>
+            <tbody id="tbody"></tbody>
+        </table>
+
+        <div class="chart-container">
+            <div class="chart-title">📈 Equity Curve Comparison</div>
+            <div class="chart-wrapper">
+                <canvas id="chart"></canvas>
+            </div>
+            <div class="legend" id="legend"></div>
+        </div>
+    </div>
+
+    <script>
+        const colors = {
+            'Equal Weight': '#00ff88',
+            'Best-Per-Bar': '#ff4444',
+            'Min Hold 6': '#00d9ff',
+            'Threshold 1.2': '#ff6b6b',
+            'Daily': '#ffd93d',
+            'Proportional': '#aa88ff',
+            'benchmark': '#888888'
+        };
+
+        fetch('comparison_data.json').then(r => r.json()).then(data => {
+            // Build table
+            const tbody = document.getElementById('tbody');
+            const rows = Object.entries(data.summary)
+                .filter(([k]) => k !== 'benchmark')
+                .sort((a, b) => b[1].ret - a[1].ret);
+
+            const bmRet = data.summary.benchmark.ret;
+
+            rows.forEach(([name, s], i) => {
+                const isBest = i === 0;
+                const retClass = s.ret > 0 ? 'positive' : 'negative';
+                tbody.innerHTML += `
+                    <tr class="${isBest ? 'best' : ''}">
+                        <td>${name}</td>
+                        <td class="${retClass}">${s.ret}%</td>
+                        <td class="${s.ann > 0 ? 'positive' : 'negative'}">${s.ann}%</td>
+                        <td>${s.sr}</td>
+                        <td class="negative">${s.dd}%</td>
+                        <td>${s.n.toLocaleString()}</td>
+                        <td>${s.wr}%</td>
+                    </tr>
+                `;
+            });
+
+            // Add benchmark row
+            tbody.innerHTML += `
+                <tr style="background: rgba(255,255,255,0.02);">
+                    <td>SPY Buy & Hold (Benchmark)</td>
+                    <td class="neutral">${bmRet}%</td>
+                    <td colspan="5" style="color: #666; text-align: left;">No trades, passive benchmark</td>
+                </tr>
+            `;
+
+            // Chart
+            const labels = data.curve.map(d => d.d);
+            const datasets = [];
+
+            // Add strategies
+            Object.keys(colors).forEach(name => {
+                if (name === 'benchmark') {
+                    datasets.push({
+                        label: 'SPY B&H',
+                        data: data.curve.map(d => d.bm),
+                        borderColor: colors.benchmark,
+                        borderWidth: 2,
+                        borderDash: [5, 5],
+                        pointRadius: 0,
+                        tension: 0.1
+                    });
+                } else if (data.curve[0][name] !== undefined) {
+                    datasets.push({
+                        label: name,
+                        data: data.curve.map(d => d[name]),
+                        borderColor: colors[name],
+                        borderWidth: name === 'Equal Weight' ? 3 : 2,
+                        pointRadius: 0,
+                        tension: 0.1
+                    });
+                }
+            });
+
+            new Chart(document.getElementById('chart'), {
+                type: 'line',
+                data: { labels, datasets },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#888', maxTicksLimit: 12 } },
+                        y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#888', callback: v => '$' + (v / 1e6).toFixed(2) + 'M' } }
+                    }
+                }
+            });
+
+            // Legend
+            const leg = document.getElementById('legend');
+            datasets.forEach(ds => {
+                leg.innerHTML += `<div class="legend-item"><div class="legend-color" style="background: ${ds.borderColor};${ds.borderDash ? 'border-style: dashed;' : ''}"></div><span>${ds.label}</span></div>`;
+            });
+        });
+    </script>
+</body>
+
+</html>
