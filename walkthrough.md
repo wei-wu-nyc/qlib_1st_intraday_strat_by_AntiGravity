@@ -294,7 +294,37 @@ This project successfully demonstrated that a **Mixture of Experts (MoE)** appro
 - **Test (2022-2025)**: Morning trends degraded with longer holds (as shown in Section 4), suggesting a shift to mean-reversion or choppier morning sessions.
 - **Lesson**: One-size-fits-all holding periods are risky. A dynamic model (or one that detects regime) is superior.
 
-![Validation Horizon Dashboard](horizon_sensitivity_valid_dashboard_1769554739209.png)
+### 6. Final Standardization (Phase 8)
+
+Based on the extensive Horizon Analysis, we have standardized the strategy configuration:
+- **Holding Period**: **36 bars (3.0 hours)**.
+    - This captures the Morning trends (which we found require ~3h to mature) and the Afternoon persistence.
+- **Model**: **Ensemble MoE** (Average of LGB, XGB, RF MoE models).
+    - The most robust performer across varying market conditions.
+- **Periods**: Confirmed performance on **Test (2022-2025)** and **Validation (2019-2021)** as the deployment standard.
+
+## Final Repository Structure
+
+The project is organized as follows:
+
+- **`src/`**: Core source code (Data Loaders, Feature Engineering, Strategy Engines).
+    - `src/strategies/ml_models/`: Individual model implementations (LightGBM, XGB, RF).
+    - `src/strategies/moe_strategy.py`: The Mixture of Experts logic.
+    - `src/strategies/ensemble_strategy.py`: The Ensemble logic (Average of models).
+- **`scripts/`**: Executable scripts for running experiments and backtests.
+    - `run_ensemble_comparison.py`: **Main Entry Point**. Runs the full Champion Backtest (Test + Valid) and generates the dashboard.
+    - `run_horizon_analysis.py`: Performs the Horizon Sensitivity analysis.
+    - `run_best_strategy.py`: Runs a single best-configuration backtest.
+    - `archive/`: Old or debug scripts.
+- **`results/`**: Output directory.
+    - `active/`: Contains the latest dashboards (`ensemble_comparison_dashboard.html`, `horizon_sensitivity_dashboard.html`).
+    - `models/`: Saved trained model files (`.joblib`).
+- **`config/`**: Configuration files (`intraday_config.yaml`).
+- **`docs/`**: Documentation.
+
+## Conclusion
+
+This project successfully demonstrated that a **Mixture of Experts (MoE)** approach, specialized by time-of-day, delivers superior risk-adjusted returns compared to a single Global model for intraday trading.
 
 
 
