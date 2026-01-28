@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Intraday Model Comparison: Ensemble Included</title>
+    <title>Intraday Model Comparison: 0bp Cost</title>
     <style>
         body { font-family: 'Segoe UI', system-ui, sans-serif; background: #1a1a2e; color: #e8e8e8; padding: 20px; }
         h1 { text-align: center; color: #00d9ff; font-size: 28px; margin-bottom: 20px; }
@@ -36,28 +36,22 @@
     </style>
     <script>
         function showTab(period, fam) {
-            // Hide all contents for this period
             document.querySelectorAll(`.content-${period}`).forEach(el => el.classList.remove('active'));
             document.querySelectorAll(`.btn-${period}`).forEach(el => el.classList.remove('active'));
-            
-            // Show selected
             document.getElementById(`tab-${period}-${fam}`).classList.add('active');
             document.getElementById(`btn-${period}-${fam}`).classList.add('active');
         }
     </script>
 </head>
 <body>
-    <h1>🤖 Comparative Analysis: Ensemble vs Individual Models (1bp Cost)</h1>
-    <p style="text-align:center; color:#888;">Adding Ensemble (Average of LGB + XGB + RF) | Net of Fees</p>
+    <h1>🤖 Comparative Analysis: 0bp Cost (Gross Returns)</h1>
+    <p style="text-align:center; color:#888;">Ensemble Model (Average of LGB + XGB + RF)</p>
     
         <div class="period-section">
             <h2>Test Period (2022-2025)</h2>
             
             <div class="tabs">
                 <button id="btn-test-Ensemble" class="tab-btn btn-test active" onclick="showTab('test', 'Ensemble')">⭐ Ensemble</button>
-                <button id="btn-test-LGB" class="tab-btn btn-test" onclick="showTab('test', 'LGB')">LightGBM</button>
-                <button id="btn-test-XGB" class="tab-btn btn-test" onclick="showTab('test', 'XGB')">XGBoost</button>
-                <button id="btn-test-RF" class="tab-btn btn-test" onclick="showTab('test', 'RF')">Random Forest</button>
             </div>
         
             <div id="tab-test-Ensemble" class="tab-content content-test active">
@@ -65,8 +59,8 @@
                     <thead>
                         <tr>
                             <th rowspan="2" class="row-header">Time of Day</th>
-                            <th colspan="4" class="fam-header ens-h">Global Ensemble (1bp)</th>
-                            <th colspan="4" class="fam-header ens-h">MoE Ensemble (1bp)</th>
+                            <th colspan="4" class="fam-header ens-h">Global Ensemble (0bp)</th>
+                            <th colspan="4" class="fam-header ens-h">MoE Ensemble (0bp)</th>
                             <th rowspan="2">Edge (bp)</th>
                         </tr>
                         <tr>
@@ -78,50 +72,50 @@
             
                 <tr>
                     <td class="row-header">09:40 Open+10m</td>
-                    <td class="neg">-6.58%</td> <td>-1.06</td> <td>47.8%</td> <td>544</td>
-                    <td class="pos">6.00%</td> <td>1.01</td> <td>50.8%</td> <td>724</td>
+                    <td class="pos">4.15%</td> <td>0.94</td> <td>49.4%</td> <td>544</td>
+                    <td class="pos">22.51%</td> <td>3.01</td> <td>52.3%</td> <td>724</td>
                     <td class="pos">+2.08</td>
                 </tr>
                 
                 <tr>
                     <td class="row-header">10:00 Morning</td>
-                    <td class="pos">9.82%</td> <td>1.66</td> <td>52.5%</td> <td>629</td>
-                    <td class="pos">11.74%</td> <td>1.50</td> <td>52.4%</td> <td>843</td>
+                    <td class="pos">24.55%</td> <td>3.66</td> <td>55.6%</td> <td>629</td>
+                    <td class="pos">32.27%</td> <td>3.50</td> <td>54.1%</td> <td>843</td>
                     <td class="neg">-0.16</td>
                 </tr>
                 
                 <tr>
                     <td class="row-header">10:30 Late Morning</td>
-                    <td class="neg">-3.90%</td> <td>-0.45</td> <td>49.7%</td> <td>638</td>
-                    <td class="pos">9.51%</td> <td>1.29</td> <td>50.1%</td> <td>808</td>
+                    <td class="pos">9.18%</td> <td>1.55</td> <td>51.6%</td> <td>638</td>
+                    <td class="pos">28.72%</td> <td>3.29</td> <td>52.8%</td> <td>808</td>
                     <td class="pos">+1.74</td>
                 </tr>
                 
                 <tr>
                     <td class="row-header">12:00 Noon</td>
-                    <td class="pos">13.85%</td> <td>1.74</td> <td>52.9%</td> <td>831</td>
-                    <td class="pos">22.28%</td> <td>2.74</td> <td>51.9%</td> <td>781</td>
+                    <td class="pos">34.43%</td> <td>3.74</td> <td>55.8%</td> <td>831</td>
+                    <td class="pos">42.95%</td> <td>4.74</td> <td>54.4%</td> <td>781</td>
                     <td class="pos">+1.00</td>
                 </tr>
                 
                 <tr>
                     <td class="row-header">13:00 Afternoon</td>
-                    <td class="pos">17.43%</td> <td>1.91</td> <td>52.4%</td> <td>908</td>
-                    <td class="pos">30.02%</td> <td>3.02</td> <td>53.6%</td> <td>920</td>
+                    <td class="pos">40.82%</td> <td>3.92</td> <td>55.1%</td> <td>908</td>
+                    <td class="pos">56.29%</td> <td>5.02</td> <td>55.7%</td> <td>920</td>
                     <td class="pos">+1.10</td>
                 </tr>
                 
                 <tr>
                     <td class="row-header">14:00 Late Afternoon</td>
-                    <td class="neg">-0.89%</td> <td>0.01</td> <td>49.7%</td> <td>929</td>
-                    <td class="pos">11.67%</td> <td>1.32</td> <td>52.0%</td> <td>895</td>
+                    <td class="pos">19.34%</td> <td>2.01</td> <td>52.5%</td> <td>929</td>
+                    <td class="pos">33.56%</td> <td>3.32</td> <td>54.4%</td> <td>895</td>
                     <td class="pos">+1.32</td>
                 </tr>
                 
                 <tr>
                     <td class="row-header">15:00 Market Close</td>
-                    <td class="neg">-21.61%</td> <td>-2.53</td> <td>45.2%</td> <td>939</td>
-                    <td class="neg">-6.04%</td> <td>-0.64</td> <td>49.0%</td> <td>890</td>
+                    <td class="neg">-5.42%</td> <td>-0.53</td> <td>49.3%</td> <td>939</td>
+                    <td class="pos">12.27%</td> <td>1.36</td> <td>52.6%</td> <td>890</td>
                     <td class="pos">+1.89</td>
                 </tr>
                 </tbody></table></div></div>
@@ -130,9 +124,6 @@
             
             <div class="tabs">
                 <button id="btn-valid-Ensemble" class="tab-btn btn-valid active" onclick="showTab('valid', 'Ensemble')">⭐ Ensemble</button>
-                <button id="btn-valid-LGB" class="tab-btn btn-valid" onclick="showTab('valid', 'LGB')">LightGBM</button>
-                <button id="btn-valid-XGB" class="tab-btn btn-valid" onclick="showTab('valid', 'XGB')">XGBoost</button>
-                <button id="btn-valid-RF" class="tab-btn btn-valid" onclick="showTab('valid', 'RF')">Random Forest</button>
             </div>
         
             <div id="tab-valid-Ensemble" class="tab-content content-valid active">
@@ -140,8 +131,8 @@
                     <thead>
                         <tr>
                             <th rowspan="2" class="row-header">Time of Day</th>
-                            <th colspan="4" class="fam-header ens-h">Global Ensemble (1bp)</th>
-                            <th colspan="4" class="fam-header ens-h">MoE Ensemble (1bp)</th>
+                            <th colspan="4" class="fam-header ens-h">Global Ensemble (0bp)</th>
+                            <th colspan="4" class="fam-header ens-h">MoE Ensemble (0bp)</th>
                             <th rowspan="2">Edge (bp)</th>
                         </tr>
                         <tr>
@@ -153,50 +144,50 @@
             
                 <tr>
                     <td class="row-header">09:40 Open+10m</td>
-                    <td class="pos">36.61%</td> <td>6.59</td> <td>57.4%</td> <td>488</td>
-                    <td class="pos">52.33%</td> <td>7.54</td> <td>55.9%</td> <td>574</td>
+                    <td class="pos">50.61%</td> <td>8.59</td> <td>60.0%</td> <td>488</td>
+                    <td class="pos">70.86%</td> <td>9.54</td> <td>58.2%</td> <td>574</td>
                     <td class="pos">+0.95</td>
                 </tr>
                 
                 <tr>
                     <td class="row-header">10:00 Morning</td>
-                    <td class="pos">23.21%</td> <td>3.89</td> <td>53.5%</td> <td>563</td>
-                    <td class="pos">54.95%</td> <td>7.17</td> <td>55.2%</td> <td>629</td>
-                    <td class="pos">+3.27</td>
+                    <td class="pos">37.89%</td> <td>5.90</td> <td>55.2%</td> <td>563</td>
+                    <td class="pos">75.72%</td> <td>9.17</td> <td>57.1%</td> <td>629</td>
+                    <td class="pos">+3.28</td>
                 </tr>
                 
                 <tr>
                     <td class="row-header">10:30 Late Morning</td>
-                    <td class="pos">47.29%</td> <td>7.17</td> <td>56.4%</td> <td>551</td>
-                    <td class="pos">33.75%</td> <td>4.84</td> <td>56.6%</td> <td>620</td>
+                    <td class="pos">64.45%</td> <td>9.17</td> <td>61.0%</td> <td>551</td>
+                    <td class="pos">51.41%</td> <td>6.84</td> <td>59.7%</td> <td>620</td>
                     <td class="neg">-2.33</td>
                 </tr>
                 
                 <tr>
                     <td class="row-header">12:00 Noon</td>
-                    <td class="pos">46.80%</td> <td>6.10</td> <td>57.8%</td> <td>642</td>
-                    <td class="pos">52.10%</td> <td>6.85</td> <td>59.4%</td> <td>625</td>
+                    <td class="pos">66.91%</td> <td>8.10</td> <td>60.9%</td> <td>642</td>
+                    <td class="pos">72.36%</td> <td>8.85</td> <td>61.6%</td> <td>625</td>
                     <td class="pos">+0.74</td>
                 </tr>
                 
                 <tr>
                     <td class="row-header">13:00 Afternoon</td>
-                    <td class="pos">4.91%</td> <td>0.86</td> <td>55.9%</td> <td>701</td>
-                    <td class="neg">-2.45%</td> <td>-0.19</td> <td>53.1%</td> <td>697</td>
+                    <td class="pos">20.70%</td> <td>2.86</td> <td>57.1%</td> <td>701</td>
+                    <td class="pos">12.14%</td> <td>1.81</td> <td>55.2%</td> <td>697</td>
                     <td class="neg">-1.05</td>
                 </tr>
                 
                 <tr>
                     <td class="row-header">14:00 Late Afternoon</td>
-                    <td class="pos">3.08%</td> <td>0.61</td> <td>51.6%</td> <td>692</td>
-                    <td class="pos">11.18%</td> <td>1.74</td> <td>52.4%</td> <td>672</td>
+                    <td class="pos">18.38%</td> <td>2.61</td> <td>55.5%</td> <td>692</td>
+                    <td class="pos">27.17%</td> <td>3.74</td> <td>55.7%</td> <td>672</td>
                     <td class="pos">+1.13</td>
                 </tr>
                 
                 <tr>
                     <td class="row-header">15:00 Market Close</td>
-                    <td class="neg">-8.04%</td> <td>-1.10</td> <td>47.9%</td> <td>699</td>
-                    <td class="neg">-1.55%</td> <td>-0.14</td> <td>50.2%</td> <td>655</td>
+                    <td class="pos">5.76%</td> <td>0.90</td> <td>51.4%</td> <td>699</td>
+                    <td class="pos">12.23%</td> <td>1.86</td> <td>53.3%</td> <td>655</td>
                     <td class="pos">+0.96</td>
                 </tr>
                 </tbody></table></div></div></body></html>

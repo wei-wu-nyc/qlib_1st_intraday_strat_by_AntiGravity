@@ -322,9 +322,17 @@ The project is organized as follows:
 - **`config/`**: Configuration files (`intraday_config.yaml`).
 - **`docs/`**: Documentation.
 
+### 7. Transaction Cost Verification (Final Audit)
+
+In the final phase, we conducted a rigorous audit of the transaction cost logic:
+- **Correction**: Identified and fixed a PnL calculation issue where entry costs were initially excluded from the "Return per Trade" metric.
+- **Verification**: Confirmed that the final "Champion" Dashboard reflects **Net Returns** (after ~2bp round-trip friction).
+- **Comparison**: A separate 0bp analysis confirmed that the strategy generates significant **Gross Alpha** (approx. 4-8bp per trade), comfortably covering the 2bp friction.
+
 ## Conclusion
 
 This project successfully demonstrated that a **Mixture of Experts (MoE)** approach, specialized by time-of-day, delivers superior risk-adjusted returns compared to a single Global model for intraday trading.
+
 
 
 

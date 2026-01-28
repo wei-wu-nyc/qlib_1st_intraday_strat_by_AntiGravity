@@ -160,8 +160,24 @@ class OncePerDayStrategy(IntradayBacktestEngine):
         gross = pos['shares'] * price
         cost = gross * self.config.transaction_cost_bps / 10000
         net = gross - cost
-        pnl = net - pos['entry_value']
-        ret = pnl / pos['entry_value'] if pos['entry_value'] > 0 else 0
+        # Correct PnL Base: Should include entry cost to reflect true round-trip friction
+        # entry_value was (Capital - EntryCost).
+        # We want to measure against (EntryValue + EntryCost) which is the allocated capital.
+        # But we don't strictly have entry_cost stored. 
+        # However, entry_value / (1 - rate) approx equals allocated capital if we assume linear.
+        # Better: Store 'allocated_capital' in position?
+        # Or just recalculate entry cost?
+        
+        # Let's derive it:
+        # entry_value = allocated - allocated * rate
+        # allocated = entry_value / (1 - bps/10000)
+        
+        rate = self.config.transaction_cost_bps / 10000
+        allocated_capital = pos['entry_value'] / (1 - rate) if rate < 1 else pos['entry_value']
+        
+        # True PnL = Net Exit Amount - Allocated Capital
+        pnl = net - allocated_capital
+        ret = pnl / allocated_capital if allocated_capital > 0 else 0
         
         self.trades.append(TradeRecord(
             instrument=inst, entry_time=pos['entry_time'], entry_price=pos['entry_price'],

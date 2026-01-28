@@ -209,8 +209,8 @@ def generate_dashboard(all_results):
     </script>
 </head>
 <body>
-    <h1>🤖 Comparative Analysis: Ensemble vs Individual Models</h1>
-    <p style="text-align:center; color:#888;">Adding Ensemble (Average of LGB + XGB + RF)</p>
+    <h1>🤖 Comparative Analysis: Ensemble vs Individual Models (1bp Cost)</h1>
+    <p style="text-align:center; color:#888;">Adding Ensemble (Average of LGB + XGB + RF) | Net of Fees</p>
     """
     
     periods_map = {'test': 'Test Period (2022-2025)', 'valid': 'Validation (2019-2021)', 'train': 'Training (2000-2018)'}
@@ -243,8 +243,8 @@ def generate_dashboard(all_results):
                     <thead>
                         <tr>
                             <th rowspan="2" class="row-header">Time of Day</th>
-                            <th colspan="4" class="fam-header {colors[fam]}">Global {fam}</th>
-                            <th colspan="4" class="fam-header {colors[fam]}">MoE {fam}</th>
+                            <th colspan="4" class="fam-header {colors[fam]}">Global {fam} (1bp)</th>
+                            <th colspan="4" class="fam-header {colors[fam]}">MoE {fam} (1bp)</th>
                             <th rowspan="2">Edge (bp)</th>
                         </tr>
                         <tr>
