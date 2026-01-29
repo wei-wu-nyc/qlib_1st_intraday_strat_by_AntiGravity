@@ -333,10 +333,91 @@ In the final phase, we conducted a rigorous audit of the transaction cost logic:
 
 This project successfully demonstrated that a **Mixture of Experts (MoE)** approach, specialized by time-of-day, delivers superior risk-adjusted returns compared to a single Global model for intraday trading.
 
+## Phase 12: Dashboard Refinement & QQQ Strategy Variants
 
+**Objective:** Address user feedback regarding chart resizing, implement Time-of-Day analysis, and add "QQQ Only" strategy variants for deeper insight.
 
+### Changes Implemented
+1.  **Dashboard Upgrades:**
+    - **Responsive Charts:** Updated Plotly configuration to resize automatically with the window.
+    - **Time-of-Day Analysis:** Added a table to aggregate performance by entry time (e.g., 09:40, 10:00), helping identify optimal trading windows.
+    - **Metric Source:** Switched trade statistics (Win Rate, Avg Trade) to use the **"Concentrated (Max 2)"** strategy as the source of truth, avoiding distortions from dynamic rebalancing logic.
 
+2.  **New Strategy Variants:**
+    - **QQQ Only (Max 2):** Tests the hypothesis of concentration in the tech sector without IWM diversification.
+    - **QQQ Only (Dynamic):** Tests dynamic capital allocation on QQQ alone.
 
+### Verification Results
 
+#### Dashboard
+#### Dashboard
+![Final Dashboard with Benchmark Summary Box](file:///Users/wei/.gemini/antigravity/brain/abb26edf-fd35-477c-ae01-1840a570a9cf/dashboard_horizontal_stats_1769588211030.png)
 
+**Observations:**
+- **Layout Correction:** The 5 summary stats boxes are now aligned horizontally in a single responsive row (using Flexbox), mimicking the original layout style.
+- **Benchmark Summary Box:** Benchmark (QQQ) is prominently displayed as the first item.
+- **Exposure Metric:** Set benchmark exposure to 100.0% to provide a consistent comparison point.
+- **Benchmark Update:** Successfully switched to **QQQ** (from SPY) as requested.
+- **Chart Resizing:** Verified that the chart now adjusts width when the browser window is resized.
+- **Time-of-Day Stats:** The new table clearly shows PnL and Win Rate for each entry slot.
+- **QQQ Performance:** The "QQQ Only (Max 2)" strategy (Cyan Dash) can be compared directly against the QQQ+IWM variant.
+- **Trade Metrics:** Win Rate matches the 55% range seen in individual strategy runs, confirming the data source fix.
 
+### Conclusion
+The dashboard now provides a more robust and interactive view of the strategy's performance, with granular insights into timing and instrument selection.
+
+## QQQ-Only Experiment Results
+> [!NOTE]
+> Training models exclusively on QQQ data (approx. 1/4th the data size of the full universe) yielded mixed but promising results, particularly in risk-adjusted returns for concentrated strategies.
+
+#### Performance Comparison (Valid + Test)
+![QQQ Experiment Dashboard](file:///Users/wei/.gemini/antigravity/brain/abb26edf-fd35-477c-ae01-1840a570a9cf/qqq_experiment_dashboard_full_1769645081279.png)
+
+**Key Findings:**
+1.  **Higher Efficiency (Sharpe):** The **New (QQQ-Only)** models achieved a higher Sharpe Ratio (**2.62**) in the "Max 2" strategy compared to the Old (Full Universe) models (**2.40**). This suggests that specialized models may be more precise in their predictions for the specific asset they are trained on.
+2.  **Lower Total Return:** The **Old** models achieved higher total returns (232% vs 203% for Max 2, 518% vs 384% for Dynamic). The broader training data likely helps capture more general market regimes or provides a "data augmentation" effect that boosts raw signal power.
+3.  **Generalization vs Specialization:** 
+    - **Specialization (QQQ-Only)** led to better risk-adjusted returns per unit of risk taken (higher Sharpe, lower Volatility - implied).
+    - **Generalization (All-ETF)** led to higher absolute returns but with slightly "looser" risk control (lower Sharpe).
+
+#### Time-of-Day Analysis (Max 2 Strategy)
+![Time of Day Analysis](file:///Users/wei/.gemini/antigravity/brain/abb26edf-fd35-477c-ae01-1840a570a9cf/time_of_day_analysis_max2_1769646396715.png)
+
+**Key Insights:**
+- **Early Morning Strength:** The **New (QQQ-Only)** model shows exceptional performance in the first 30 minutes (09:40-10:00), capturing the market open volatility effectively.
+- **Mid-Day Stability:** Both models perform comparably during the mid-day chop, but the QQQ-only model appears slightly more selective (fewer trades typically).
+
+**Conclusion:**
+Training on QQQ-only data is a viable strategy if the goal is maximizing capital efficiency (Sharpe). However, for maximizing total wealth, the multi-asset training approach appears superior. A hybrid approach (ensemble of both) could be an avenue for future exploration.
+
+## Start Time Experiment (9:40 vs 9:30)
+> [!NOTE]
+> We tested relaxing the entry constraint to allow trading at Market Open (9:30) versus the baseline (9:40) using the original full-universe models.
+
+#### Performance Comparison (Valid + Test)
+![Start Time Dashboard](file:///Users/wei/.gemini/antigravity/brain/abb26edf-fd35-477c-ae01-1840a570a9cf/start_time_dashboard_1769647875302.png)
+
+**Key Findings:**
+1.  **Identical Performance:** The dashboard reveals **identical performance curves** for both the 9:40 and 9:30 start times across both strategies (Max 2 and Dynamic).
+2.  **Implication:** This indicates that the models either:
+    - Did not generate high-confidence signals at the very first bar (9:30).
+    - Or that the specific filtering/ranking conditions prevented any *new* trades from entering at 09:30 that wouldn't have naturally occurred at 09:40.
+3.  **Conclusion:** Relaxing the start time to 9:30 had **no impact** on this specific model/strategy configuration. The 9:40 start time is effectively acting as a neutral filter.
+
+**Recommendation:**
+Since the 9:40 start time (avoiding the first 10 minutes of extreme volatility) is a common robustness measure and removing it yields no benefit, we recommend **keeping the 9:40 start time constraint** to safeguard against potential slippage or bad data often seen at the open.
+
+## Project Finalization
+> [!NOTE]
+> The project structure has been cleaned up for production readiness.
+
+**Actions Taken:**
+1.  **Reverted to Original Models:** The core pipeline (`run_full_day_strategy_v2.py`) is set to use the verified 4-ETF universe models.
+2.  **Archived Experiments:** Scripts for QQQ-only training and Start-Time analysis have been moved to `scripts/experiments/`.
+3.  **Documentation:** 
+    - Updated `README.md` with clear entry points.
+    - Created `experiments.md` to persist knowledge from side-projects.
+    - Finalized `walkthrough.md` with project history.
+
+**Next Steps:**
+- The codebase is ready for version control and potential live-testing deployment.

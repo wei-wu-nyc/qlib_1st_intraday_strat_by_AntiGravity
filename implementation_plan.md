@@ -30,13 +30,33 @@ Reduce overfitting in current LightGBM models by training a "Robust" variant wit
 - **Comparison Visual**: Update the HTML dashboard to compare **Global (Baseline)** vs **Robust** vs **MoE**.
     - This allows us to see if the "Robust" model fixes the training set overfitting while maintaining/improving test set performance.
 
+## Phase 12: Strategy Refinement & Dashboard Analysis (Current)
+
+**Goal:** Address user feedback regarding chart resizing, Time-of-Day analysis, and add QQQ-only strategy variants.
+
+#### [NEW] [run_full_day_strategy_v2.py](file:///Volumes/SAMSUNG_2TB/WorkMac/AntiGravity/qlib_first_intraday_test/scripts/run_full_day_strategy_v2.py)
+- Created a clean V2 script to implement extensive changes safely.
+- **Key Features:**
+    - **New Strategies:**
+        - `MultiTradeStrategy (QQQ Only Max 2)`: Evaluates pure QQQ concentration.
+        - `RebalanceStrategy (QQQ Only Dynamic)`: Evaluates pure QQQ dynamic allocation.
+    - **Time-of-Day Analysis:** Aggregates performance by entry time (09:40, 10:00, etc.).
+    - **Responsive Dashboard:** Updated Plotly config for auto-resizing.
+    - **Corrected Metrics:** Trade stats sourced exclusively from "Concentrated (Max 2)" strategy for accuracy.
+
+#### [MODIFY] [walkthrough.md](file:///Volumes/SAMSUNG_2TB/WorkMac/AntiGravity/qlib_first_intraday_test/walkthrough.md)
+- Will update with final analysis and screenshots from V2 run.
+
 ## Verification Plan
 
 ### Automated Tests
-- Run `scripts/train_robust_model.py` to generate the new model.
-- Run the updated backtest script to generate the `moe_full_dashboard.html`.
+- [x] Run `run_full_day_strategy_v2.py` to generate `results/active/full_day_strategy_dashboard_v2.html`.
+- [ ] Check console output for successful execution of all 3 periods.
 
 ### Manual Verification
-- **Check Overfitting**: Compare the "Total Return" in the **Train** period between Global and Robust models. The Robust model should have significantly *lower* (more realistic) training returns than the Global model.
-- **Check Generalization**: Compare performance in the **Test** period.
-- **Verify Win Rate**: Ensure the "Win Rate" column appears and looks correct (typically 50-55% for intraday).
+- [ ] Open `full_day_strategy_dashboard_v2.html` in browser.
+- [ ] Verify:
+    - [ ] Charts resize when window changes.
+    - [ ] "Time of Day" table is populated and sorted correctly.
+    - [ ] "QQQ Only" strategy traces appear on the chart.
+    - [ ] "Concentrated (Max 2)" metrics match expected values (e.g. 55% WR).
