@@ -9,6 +9,7 @@ class BacktestConfig:
     """Configuration for intraday backtest."""
     initial_capital: float = 1_000_000.0
     transaction_cost_bps: float = 0.0
+    borrow_rate_annual: float = 0.0
     position_close_bar: int = 77  # 15:55
     last_entry_bar: int = 67  # 15:00
     bar_duration_minutes: int = 5
@@ -41,8 +42,11 @@ class BacktestResults:
     win_rate: float
     trades: pd.DataFrame
     equity_curve: pd.DataFrame
+    equity_curve: pd.DataFrame
     daily_returns: List[float]
     config: BacktestConfig
+    daily_exposure: float = 0.0
+    max_exposure: float = 0.0
 
 class IntradayBacktestEngine:
     """
@@ -56,7 +60,8 @@ class IntradayBacktestEngine:
         self.equity_curve = []
     
     def calculate_results(self, capital: float, daily_returns: List[float], 
-                         trades: List[TradeRecord], equity_curve: List[Tuple[pd.Timestamp, float]]) -> BacktestResults:
+                         trades: List[TradeRecord], equity_curve: List[Tuple[pd.Timestamp, float]],
+                         daily_exposures: List[float] = None) -> BacktestResults:
         """Calculate performance metrics from raw backtest data."""
         if trades:
             df = pd.DataFrame([{
@@ -87,9 +92,12 @@ class IntradayBacktestEngine:
             
         wr = (df['return_pct'] > 0).mean() if len(df) > 0 else 0
         
+        avg_exp = np.mean(daily_exposures) if daily_exposures else 0.0
+        max_exp = np.max(daily_exposures) if daily_exposures else 0.0
+        
         return BacktestResults(
             total_return=tot_ret, annualized_return=ann, sharpe_ratio=sr,
             max_drawdown=dd, num_trades=len(trades), win_rate=wr,
             trades=df, equity_curve=eq_df, daily_returns=daily_returns,
-            config=self.config
+            config=self.config, daily_exposure=avg_exp, max_exposure=max_exp
         )

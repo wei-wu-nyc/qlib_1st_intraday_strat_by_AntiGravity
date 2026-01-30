@@ -19,7 +19,8 @@ class MultiTradeStrategy(IntradayBacktestEngine):
     
     def __init__(self, config: Optional[BacktestConfig] = None, 
                  max_positions: int = 5, exit_bars: int = 36,
-                 allowed_entry_bars: Optional[List[int]] = None):
+                 allowed_entry_bars: Optional[List[int]] = None,
+                 fixed_pos_pct: Optional[float] = None):
         """
         Args:
             config: Backtest configuration
@@ -31,6 +32,7 @@ class MultiTradeStrategy(IntradayBacktestEngine):
         self.max_positions = max_positions
         self.exit_bars = exit_bars
         self.allowed_entry_bars = allowed_entry_bars if allowed_entry_bars is not None else self.DEFAULT_ENTRY_BARS
+        self.fixed_pos_pct = fixed_pos_pct
         self.reset()
     
     def reset(self):
@@ -62,6 +64,12 @@ class MultiTradeStrategy(IntradayBacktestEngine):
             
             # --- New Day Logic ---
             if current_date != self.prev_date:
+                # Deduct overnight borrowing cost if applicable (cash < 0)
+                if self.prev_date is not None and self.cash < 0 and self.config.borrow_rate_annual > 0:
+                     daily_rate = self.config.borrow_rate_annual / 365.0
+                     interest = abs(self.cash) * daily_rate
+                     self.cash -= interest
+
                 # Calculate daily return from previous close
                 current_total_equity = self._get_total_equity(bar_data)
                 if self.prev_date is not None and self.daily_start_equity > 0:
@@ -78,6 +86,40 @@ class MultiTradeStrategy(IntradayBacktestEngine):
                 
                 self.daily_start_equity = current_total_equity
                 self.prev_date = current_date
+            
+                # --- FIX: Flash Close Overnight Positions (Short Day Protection) ---
+                # If positions exist at the start of a new day, it means they were missed
+                # by the previous day's EOD check (likely a short 13:00 close).
+                # prevent holding them through the new day.
+                if self.positions:
+                    for i in range(len(self.positions) - 1, -1, -1):
+                        pos = self.positions[i]
+                        inst = pos['instrument']
+                        
+                        # We must close it using current day's data
+                        if inst in bar_data.index:
+                            # Use OPEN price to capture overnight gap risk
+                            # (If open is missing, fallback to close)
+                            exit_price = bar_data.loc[inst, 'open'] if 'open' in bar_data.columns else bar_data.loc[inst, 'close']
+                            
+                            self._close_position(
+                                pos_idx=i, 
+                                timestamp=timestamp, 
+                                price=exit_price, 
+                                bar_index=bar_index, 
+                                reason='overnight_flush'
+                            )
+                        else:
+                            # Instrument not trading today? 
+                            # Force close at last known to clear the list, assuming flat exit from last price.
+                            # (Rare edge case for ETFs)
+                            self._close_position(
+                                pos_idx=i, 
+                                timestamp=timestamp, 
+                                price=pos.get('last_known_price', pos['entry_price']), 
+                                bar_index=bar_index, 
+                                reason='overnight_flush_missing'
+                            )
             
             # --- 1. Manage Exits (Independent for each position) ---
             # Iterate backwards to safely remove
@@ -110,18 +152,27 @@ class MultiTradeStrategy(IntradayBacktestEngine):
             # c) Not EOD
             
             is_entry_time = bar_index in self.allowed_entry_bars
-            has_capacity = len(self.positions) < self.max_positions
+            
+            # Capacity Check
+            if self.fixed_pos_pct:
+                has_capacity = True # Infinite capacity in leverage mode
+            else:
+                has_capacity = len(self.positions) < self.max_positions
             
             if is_entry_time and has_capacity and bar_index <= self.config.last_entry_bar:
                 # Determine allocation size
-                # 1/5 of CURRENT Total Equity
                 total_eq = self._get_total_equity(bar_data)
-                target_allocation = total_eq / self.max_positions
                 
-                # Do we have enough cash?
-                # Check cost estimate (approx 1bp)
-                cost_buffer = target_allocation * 0.0005 
-                if self.cash >= (target_allocation + cost_buffer):
+                if self.fixed_pos_pct:
+                    target_allocation = total_eq * self.fixed_pos_pct
+                    allocation_allowed = True # Allow negative cash
+                else:
+                    # Classic Max 2 Logic
+                    target_allocation = total_eq / self.max_positions
+                    cost_buffer = target_allocation * 0.0005 
+                    allocation_allowed = self.cash >= (target_allocation + cost_buffer)
+                
+                if allocation_allowed:
                     # Find best candidate
                     best_inst, best_sig = self._find_best(bar_data, instruments)
                     
@@ -153,7 +204,7 @@ class MultiTradeStrategy(IntradayBacktestEngine):
             else:
                 self.daily_exposures.append(0.0)
             
-        return self.calculate_results(self.config.initial_capital, self.daily_returns, self.trades, self.equity_curve)
+        return self.calculate_results(self.config.initial_capital, self.daily_returns, self.trades, self.equity_curve, self.daily_exposures)
 
     def _get_total_equity(self, bar_data):
         eq = self.cash

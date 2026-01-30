@@ -65,6 +65,7 @@ class LightGBMIntradayStrategy(MLStrategy):
         X: pd.DataFrame,
         y: pd.Series,
         eval_set: Optional[Tuple[pd.DataFrame, pd.Series]] = None,
+        sample_weight: Optional[pd.Series] = None,
         **kwargs
     ) -> 'LightGBMIntradayStrategy':
         """Fit LightGBM model."""
@@ -74,10 +75,21 @@ class LightGBMIntradayStrategy(MLStrategy):
         X_clean = X.replace([np.inf, -np.inf], np.nan).fillna(0)
         y_clean = y.replace([np.inf, -np.inf], np.nan).fillna(0)
         
+        # Align weights if provided
+        w_clean = None
+        if sample_weight is not None:
+            w_clean = sample_weight.replace([np.inf, -np.inf], np.nan).fillna(0)
+        
         # Filter out any remaining problematic rows
         valid_mask = np.isfinite(y_clean) & X_clean.apply(np.isfinite).all(axis=1)
+        if w_clean is not None:
+             valid_mask &= np.isfinite(w_clean)
+
         X_clean = X_clean[valid_mask]
         y_clean = y_clean[valid_mask]
+        
+        if w_clean is not None:
+            w_clean = w_clean[valid_mask]
         
         self.model = lgb.LGBMRegressor(
             n_estimators=self.n_estimators,
@@ -100,10 +112,11 @@ class LightGBMIntradayStrategy(MLStrategy):
             
             self.model.fit(
                 X_clean, y_clean,
+                sample_weight=w_clean,
                 eval_set=[(X_val_clean, y_val_clean)],
             )
         else:
-            self.model.fit(X_clean, y_clean)
+            self.model.fit(X_clean, y_clean, sample_weight=w_clean)
         
         self.is_fitted = True
         return self

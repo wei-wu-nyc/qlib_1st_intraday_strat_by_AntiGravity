@@ -44,3 +44,9 @@ results/archive/metrics/exit_experiments_equity.csv
 results/archive/metrics/equity_curves.csv
 results/archive/metrics/exit_experiments_equity.csv
 results/archive/metrics/equity_curves.csv
+
+# Qlib Results
+results/
+*.csv
+*.html
+
