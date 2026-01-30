@@ -91,12 +91,19 @@ models:
     colsample_bytree: 0.8
     random_state: 42
     
+
   lightgbm:
     n_estimators: 500
     max_depth: 6
     learning_rate: 0.05
     num_leaves: 31
     random_state: 42
+
+training:
+  sample_weighting:
+    method: "exponential" # "linear", "exponential", "none"
+    linear_min_weight: 0.25
+    exponential_half_life_years: 2.0
 
 # Backtest Configuration
 backtest:

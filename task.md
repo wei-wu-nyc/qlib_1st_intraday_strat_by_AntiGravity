@@ -1,81 +1,57 @@
-# Rewrite Intraday Backtest Using Qlib
+# Qlib Walk-Forward Validation Tasks
 
-## Tasks
+- [x] **Research Qlib RollingTrainer**
+    - [x] Search for documentation and examples of `RollingTrainer` and `RollingGen`.
+    - [x] Investigate configuration options (train window size, step size, fixed vs expanding start).
+    - [x] Determine how to aggregate statistics across periods.
+- [x] **Design Rolling Workflow**
+    - [x] Create implementation plan for `scripts/run_rolling_validation.py`.
+    - [x] Define config structure for rolling parameters.
+    - [x] Adapt MoE and Global models to fit the rolling interface.
+- [x] **Implementation**
+    - [x] Create rolling config in `config/intraday_config.yaml`.
+    - [x] Implement the rolling training script (`scripts/run_rolling_validation.py` & `src/training/moe_trainer.py`).
+    - [x] Implement result aggregation and dashboard generation.
+- [x] **Verification**
+    - [x] Run rolling validation simulation (Completed - Models Trained 2019-2025).
+    - [x] Verify metrics match individual run logic (Dashboard Reviewed).
+    - [x] Generate walk-forward dashboard (Screenshot captured).
+- [x] **Individual Model Breakdown**
+    - [x] Update `scripts/run_rolling_validation.py` to evaluate LGB, XGB, RF separately.
+    - [x] Update dashboard to show statistics for individual models (Max 2 Strategy).
+    - [x] Verify dashboard output.
+- [x] **Sample Weighting**
+    - [x] Implement linear weighing logic in `moe_trainer.py`.
+    - [x] Run rolling validation (Linear, min=0.25) -> `rolling_validation_linear.html`.
+    - [x] Run rolling validation (Exponential, half-life=2yr).
+    - [x] Compare linear vs exponential results.
+- [x] **Phase 4: Leverage Support (AE Variants)**
+    - [x] Implement `borrow_rate` in config and `MultiTradeStrategy`.
+    - [x] Implement `fixed_pos_pct` for "All-Entry" leverage logic.
+    - [x] Run rolling validation for [Max2, AE80, AE100, AE150, AE200].
+    - [x] Generate Leverage Dashboard (inc. Time-of-Day analysis for AE100).
+    - [x] Document key findings (AE200 > Max2 > AE100).
 
-- [x] Implement equal-weight and best-per-bar backtests
-- [x] Create dashboard with benchmark
-- [x] Run 1bp cost comparison- [x] Run with 1bp transaction cost
-- [x] Implement reduced-switching strategies
-- [x] Optimize timing (10am entry / 24-bar exit found)
-- [x] Refactor and Cleanup:
-  - [x] Split qlib_backtest.py into engine + strategies
-  - [x] Create run_best_strategy.py
-  - [x] Extract dashboard generator
-  - [x] Archive old files
-  - [x] Verify final run
-- [x] Time-of-Day MoE Experiment:
-  - [x] Create specialized training script (train_moe.py)
-  - [x] Train 6 models (9:30, 10:00, 10:30, 12:00, 14:00, 15:00)
-  - [x] Implement MoE Strategy (time-based switching)
-  - [x] Run backtest comparison (MoE vs Global)
-  - [x] Create comparison dashboard (Test Period)
-  - [x] Run Full Day Analysis (Train/Valid/Test)
-  - [x] Update dashboard with full history
-  - [x] Bug Fix: Resolved -100% return due to early market close entries
+    - [ ] Dynamic Entry Selection (Best of Market Nodes)
+    - [ ] Parameter Optimization (Size, Exit) for new entries
+- [x] **Phase 5: Entry Validation** <!-- id: 5 -->
+    - [x] Experiment: Expanded Entry Times (Default vs Extended) <!-- id: 6 -->
+    - [x] Experiment: Relaxed vs Fixed Entry <!-- id: 7 -->
+    - [x] Experiment: Entry Delay Sensitivity <!-- id: 8 -->
+    - [x] Experiment: Exact Single Bar Entry Map <!-- id: 9 -->
+    - [x] Analysis: Sub-period Stability (2019-2022 vs 2023-2025) <!-- id: 10 -->
 
-- [ ] Trading Model Refinement:
-  - [ ] Plan robust model parameters and dashboard updates
-  - [ ] Add "Win Rate" to dashboard
-  - [ ] Train Robust LightGBM (max_depth=3, n_estimators=2000, lr=0.01)
-  - [x] Analyze Robust Model Features
-- [/] **Phase 6: Expanded ML Models & Ensemble**
-    - [x] Train MoE XGBoost Models
-    - [x] Train MoE Random Forest Models
-    - [x] Implement Ensemble Strategy (Avg of LGB+XGB+RF)
-    - [/] detailed Comparison Dashboard (LGB vs XGB vs RF vs Ensemble)
-    - [ ] Analyze feature importance across model families (Skipped for now)
+- [x] **Phase 6: Strategy Refinement (6-Slot)** <!-- id: 11 -->
+    - [x] Run Leverage Analysis V2 (6 Slots: 9:45-12:20) <!-- id: 12 -->
+    - [x] Analyze Impact of removing afternoon trades <!-- id: 13 -->
+    - [x] **Bug Fix:** Short Trading Day (Early Close) Logic <!-- id: 14 -->
+    
+- [x] **Phase 7: Extended History Validation (2013-2025)** <!-- id: 15 -->
+    - [x] Create `run_extended_history.py` (Train+Predict loop) <!-- id: 16 -->
+    - [x] Generate Period Comparison Dashboard (13-15, 16-18, 19-22, 23-25) <!-- id: 17 -->
+    - [x] Save full trade logs for analysis <!-- id: 18 -->
 
-- [/] **Phase 7: Horizon Sensitivity Analysis**
-    - [x] Plan experiment (Ensemble MoE on horizons 12, 18, 24, 30, 36)
-    - [x] Create `run_horizon_analysis.py`
-    - [x] Generate Sensitivity Dashboard
-    - [x] Document optimal holding period insights
-
-- [/] **Phase 8: Finalize Configuration**
-    - [x] Update default holding period to **36 bars** in scripts/strategies
-    - [x] Run final "Champion" Backtest
-    - [x] Create Git Branch `feature/ensemble-moe-complete`
-    - [x] Commit and Push changes
-    - [x] Final cleanup and archival
-    - [x] Finalized Documentation (Transaction Cost Audit)
-    - [x] Pushed to Main
-
-- [/] **Phase 9: Full Day Multi-Trade Strategy**
-    - [x] Create `MultiTradeStrategy` in `src/backtest/strategies/multi_trade.py`
-    - [x] Enhance Dashboard (Equity Curve + Detailed Stats + Benchmark + Controls)
-    - [x] Run Validation (verify overlapping trades and limits)
-    - [x] Add QQQ+IWM Only Strategy Variant
-    - [x] Add Valid Only View & Daily Returns Stats
-    - [x] Add Avg Invested Metric
-
-- [x] **Phase 10: Capital Efficiency Experiment**
-    - [x] Create Concentrated Strategy (Max 2 positions) in script
-    - [x] Run Comparison (Full vs. QQQ+IWM vs. Concentrated)
-    - [x] Update Dashboard with 3-way comparison
-    - [x] Verify higher utilization and returns
-
-- [x] **Phase 11: Dynamic Rebalancing (100% Invested)**
-    - [x] Create `RebalanceStrategy` with internal netting logic
-    - [x] Integrate into `run_full_day_strategy.py`
-    - [x] Run Comparison (Full vs. QQQ+IWM vs. Concentrated vs. Rebalance)
-    - [x] Update Dashboard with Correct Metrics Source
-
-- [x] **Phase 12: Strategy Refinement & Analysis**
-    - [x] Fix Dashboard Chart Resizing
-    - [x] Add Time-of-Day Stats (Win%, Return, Trades)
-    - [x] Add "Max 2 (QQQ Only)" Variant
-    - [x] Add "Dyn Rebalancing (QQQ Only)" Variant
-    - [x] Run Full Simulation & Verify (V2 Script)
-    - [x] Change Dashboard Benchmark to QQQ
-    - [x] Add Benchmark Summary Box to Dashboard Top
-    - [x] Fix Stats Box Layout (Horizontal Alignment)
+- [x] **Phase 8: Quarterly Validation (Seasonality vs Degradation)** <!-- id: 19 -->
+    - [x] Create `run_quarterly_validation.py` (Loop 2013-2025 Q1-Q4) <!-- id: 20 -->
+    - [x] Implement Dashboard with Seasonality (MoY, DoW, DoM) <!-- id: 21 -->
+    - [x] Launch Long-Running Job <!-- id: 22 -->
